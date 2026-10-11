@@ -1,6 +1,6 @@
 # Ambulancias Cuánticas (Quantum Ambulances)
 
-A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a response radius. The repository contains the original **proof of concept** plus input-driven core and quantum modules for the planned Qollab app. The interactive app is not implemented here yet.
+A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a coverage radius. The repository contains the original **proof of concept**, input-driven core/quantum modules, and an interactive map editor and comparison UI with a minimal Qollab entrypoint. Local browser checks pass; actual Qollab and remote-backend validation remain pending.
 
 ## The problem and the prototype
 
@@ -58,7 +58,7 @@ Tests submit no remote or paid jobs. To check only the dependency-free core:
 
 ## App direction and limitations
 
-The pitch proposes a project page showing the problem, a map of zones and selected bases, a comparison of methods, plots of measured results, instructions, limitations, and credits. The current issue plan targets a Qollab JS/Qiskit app. Core/quantum functions support changed radius, sites and ambulance count, but no map editor or comparison UI is implemented here yet. Actual Qollab lifecycle and remote-backend behavior remain to be verified by the platform workstream. Road travel times and demand over time are future model extensions.
+The interactive editor loads compact/full CABA or the synthetic case, supports bounded site dragging/numeric edits, and recomputes greedy/exact previews after changes to sites, radius or K. The comparison panel uses shared actual-coverage layers and excludes stale quantum results. Root `index.html`, `main.js`, `main.css` provide the minimal Qollab shell; the UI modules accept an injected transport for integration with other scaffolding. See [UI setup and validation](docs/UI.md) for local preview commands, packaging and actual-platform checks. Road travel times and demand over time are future model extensions.
 
 The QAOA cost is only a pairwise approximation of true union coverage. The original prototype uses synthetic data; the packaged CABA cases use static census-population proxies and curated candidate sites. Exact statevector-based angle optimization does not scale to large numbers of sites. Do not describe this prototype as an operational emergency dispatch tool or claim a demonstrated speed advantage over classical methods.
 
@@ -66,6 +66,7 @@ The QAOA cost is only a pairwise approximation of true union coverage. The origi
 
 - `baseline.py` — executable Qiskit proof of concept (Python; code/comments in Spanish).
 - `ambulance/` — input-driven core, dynamic QAOA adapter, and JSON-string bridge.
+- `index.html`, `main.js`, `main.css`, `ui/` — Qollab entrypoint and reusable metric map/editor/comparison UI.
 - `data/cases/synthetic.json` — original synthetic inputs in the shared case format.
 - `tests/` — deterministic core and quantum adapter regressions, using local jobs only.
 - `docs/` — integration contract and observed validation.
@@ -76,4 +77,4 @@ The QAOA cost is only a pairwise approximation of true union coverage. The origi
 - `tools/` — `build_cases.py` regenerates the case assets from the public datasets (stdlib only); `validate_cases.py` checks the case contract and coverage sanity.
 - `LICENSE` — MIT license.
 
-The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. Core/adapter work used OpenAI Codex assistance, as recorded in the contract. No interactive app or CI configuration is present yet.
+The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. Core/adapter and UI work used OpenAI Codex assistance, as recorded in the contract and UI documentation. No CI configuration is present yet.

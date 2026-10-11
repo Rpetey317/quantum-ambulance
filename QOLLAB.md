@@ -94,6 +94,15 @@ Record the resulting `counts` per backend for a comparison table on the project
 page (e.g. probability of measuring an optimal selection and % of shots with
 exactly K sites per simulator — a nice noise-model comparison for the judges).
 
+## Interactive JS entrypoint
+
+Root `index.html`, `main.js`, `main.css` now mount the metric map editor and
+comparison panel in `ui/`. The transport uses the supplied backend and JSON
+Python bridge, without external runtime services. See [UI.md](docs/UI.md) for
+packaged files, local preview, observed Chrome checks, and the remaining actual
+Qollab Run/Stop/IonQ smoke procedure. This shell has not yet been exercised on
+Qollab itself; local BasicSimulator results are not remote-platform evidence.
+
 ## Porting `baseline.py` to a Qollab Python project
 
 The input-driven port is now available in `ambulance/`; the original script
