@@ -71,7 +71,10 @@ IonQ job; save portable case JSON before starting it.
 Runtime/reset constraints follow the official
 [JS project docs](https://qollab.xyz/learn/docs/js-qiskit-projects) and
 [runtime docs](https://qollab.xyz/learn/docs/runtime-environment).
-Actual Qollab and IonQ remote checks have **not** been run by this implementation.
+Actual Qollab runs are recorded in `docs/PROJECT_PAGE.md`: CABA Comuna 4 ran on
+the built-in simulator (256 shots, 100% valid), the IBM Boston noise model
+(64 shots, 40.6% valid) and the IonQ Aria 2 simulator (64 shots, 21.9% valid).
+No hardware execution.
 
 ## Editor and result behaviour
 

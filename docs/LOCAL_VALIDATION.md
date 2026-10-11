@@ -1,8 +1,9 @@
 # Local validation and Qollab handoff
 
 Observed on 2026-10-11, Windows, CPython 3.13.5, Qiskit 2.5.2,
-NumPy 2.5.4 and SciPy 1.18.1. These observations are local tests, not evidence
-of execution inside Qollab, on IonQ's cloud, or on hardware.
+NumPy 2.5.4 and SciPy 1.18.1. These observations are local tests. Actual
+Qollab runs on the built-in, IBM-noise-model and IonQ simulators are recorded
+in `docs/PROJECT_PAGE.md`; no IonQ hardware execution.
 
 ## Reproduce local tests
 
@@ -100,24 +101,22 @@ serializable gates, compiled local depth 729, no `initialize` or `reset`.
 IonQ may change this gate count in its own compiler and may still reject or
 limit a remote job; this offline check cannot establish remote feasibility.
 
-## Outstanding platform checks
+## Platform checks
 
-1. In a Qollab project, package `ambulance/`, the synthetic fixture and
-   `requirements.txt`; copy `examples/qollab_smoke.py` to root `main.py`.
-   Select the free built-in simulator and 64 shots. Save the source revision,
-   printed JSON identity/settings/counts/timings and backend name.
-2. In the JS scaffold from issue #1/#5, use the documented `.callPromising`
-   bridge. Edit a site and K; confirm preview and returned quantum result use
-   the edited identity. Verify the actual Run/Stop/reset behavior and ensure
-   stale results cannot be presented as current.
-3. Repeat on the available free backends after checking circuit support.
-   For an identified IonQ remote simulator, first request only 64 shots, in a
-   fresh run. Save valid/invalid-shot rates and actual coverage, or the exact
-   failure message. A second IonQ job requires the platform's supported new-run
-   workflow, which must be observed rather than assumed.
-4. Run both final packaged datasets and record their exact revisions and input
-   fingerprints. Scope timings to the fields actually measured. The current
-   adapter intentionally rejects IonQ QPUs; no paid hardware check was performed.
+The remote checks listed above have since been performed; results are recorded
+in `docs/PROJECT_PAGE.md`. On the packaged app, the CABA Comuna 4 case ran on:
 
-The actual Qollab browser run, reset/edit lifecycle and IonQ remote check remain
-pending. They cannot be marked passed from these local/offline observations.
+- Qollab's built-in simulator: 256 shots, 256 (100%) valid exactly-K shots,
+  best coverage 85.1%, backend job 0.053 s.
+- IBM noise model (Boston): 64 shots, 26 (40.6%) valid, best coverage 81.4%,
+  backend job 34.741 s.
+- IonQ simulator (Aria 2): 64 shots, 14 (21.9%) valid, best coverage 83.7%,
+  backend job 14.701 s.
+
+Remote backends return shots that break the exactly-K constraint, which the
+adapter rejects. No IonQ hardware run was performed; the adapter still
+intentionally rejects QPUs.
+
+Not yet observed on the platform: the synthetic and full-CABA datasets, the
+edit/staleness lifecycle under remote backends, and a second IonQ job (which
+requires a fresh Run).

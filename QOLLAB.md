@@ -134,9 +134,11 @@ remains executable. See [the integration contract](docs/CONTRACT.md).
    runtime docs. Circuit graphical drawings need Qiskit Visualizations enabled.
    Offline charts are an option, not a consequence of Matplotlib being absent.
 
-Local built-in-style simulator runs and offline IonQ payload conversion passed;
-actual Qollab browser/lifecycle and IonQ remote smoke checks remain pending.
-Start those with 64 shots. The adapter caps identified IonQ simulators at 128
+Local built-in-style simulator runs and offline IonQ payload conversion passed.
+Remote checks have since run: the spike submitted Aria 1 jobs (see the evidence
+table below), and the packaged app ran CABA Comuna 4 on Qollab's built-in, IBM
+Boston noise and IonQ Aria 2 simulators (`docs/PROJECT_PAGE.md`). Start remote
+checks with 64 shots. The adapter caps identified IonQ simulators at 128
 shots as a conservative application policy and disables IonQ hardware.
 
 Docs: <https://qollab.xyz/learn/docs/runtime-environment>,

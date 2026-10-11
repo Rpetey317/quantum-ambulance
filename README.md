@@ -1,6 +1,18 @@
 # Ambulancias Cuánticas (Quantum Ambulances)
 
-A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a coverage radius. The repository contains the original **proof of concept**, input-driven core/quantum modules, and an interactive map editor and comparison UI with a minimal Qollab entrypoint. Local browser checks pass; actual Qollab and remote-backend validation remain pending.
+A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a coverage radius. The repository contains the original **proof of concept**, input-driven core/quantum modules, and an interactive map editor and comparison UI with a minimal Qollab entrypoint. Run the app on the hosted [Qollab project](https://qollab.xyz/u/rpetey317/ambulance-localizer).
+
+## Run it locally
+
+Everything below is local-only; it submits no remote or paid jobs.
+
+```bash
+python -m pip install -r requirements.txt   # qiskit==2.5.2, numpy, scipy
+```
+
+- `python baseline.py` — original proof of concept (~1–2 min; details below).
+- `python -m tools.preview_ui` — interactive map editor and comparison UI at `http://127.0.0.1:8765` (Ctrl+C to stop). A localhost QA harness backed by the real Python bridge and local `BasicSimulator`; not for use inside Qollab. See [docs/UI.md](docs/UI.md).
+- `python -m unittest discover -s tests -v` — Python core/adapter suite. `npm test` — UI controller/model tests (Node only, no build step or npm dependencies).
 
 ## The problem and the prototype
 
@@ -30,9 +42,34 @@ The pitch states it was tested with Qiskit 2.5.2, NumPy, and SciPy. Install thos
 python baseline.py
 ```
 
-The script prints the greedy, exact, and sampled QAOA results, the fraction of valid shots, the probability of measuring an optimum relative to random selection, and the five most frequent measured bitstrings. In `baseline.py`, optimization and `StatevectorSampler` run locally. The new adapter accepts a supplied backend and has been checked with local `BasicSimulator`; IonQ circuit/payload conversion was checked offline, with no remote or hardware execution. The pitch estimates roughly 1–2 minutes for the original simulator run, depending on the environment.
+The script prints the greedy, exact, and sampled QAOA results, the fraction of valid shots, the probability of measuring an optimum relative to random selection, and the five most frequent measured bitstrings. In `baseline.py`, optimization and `StatevectorSampler` run locally. The new adapter accepts a supplied backend and has been run locally on `BasicSimulator` and remotely on Qollab's built-in, IBM-noise-model and IonQ simulators (results in `docs/PROJECT_PAGE.md`); no hardware execution. The pitch estimates roughly 1–2 minutes for the original simulator run, depending on the environment.
 
 To experiment, edit `ZONAS`, `SITIOS`, `RADIO_KM`, `K`, or the circuit settings in `baseline.py`. The data and all derived arrays/circuit state are created at import time, so rerun the script after changing inputs.
+
+## Results
+
+Reference runs use Qiskit's local `BasicSimulator` (1,024 shots) through the same code path the app uses (`tools/reference_runs.py`); they are not Qollab or IonQ results. Full table and charts: `docs/results/REFERENCE.md`.
+
+| Case | Greedy | Exact | QAOA best shot | P(optimum), QAOA | P(optimum), random | Amplification |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Synthetic | 79.7% | 90.1% | 90.1% | 16.0% (26.6%*) | 3.6% | 4.5× (7.4×*) |
+| CABA Comuna 4 | 81.0% | 85.1% | 85.1% | 1.8% | 1.8% | 1.0× |
+| CABA full city | 58.2% | 58.2% | 58.2% | 10.4% (41.1%*) | 1.8% | 5.9× (23×*) |
+
+\* With a larger angle-optimization budget (4 restarts × 500 iterations, as in the original prototype) instead of the app's default (2 × 150).
+
+Runs on the packaged app in Qollab, using the CABA Comuna 4 case:
+
+| Backend (Select QPU) | Shots | Valid exactly-K shots | QAOA best coverage | P(optimum) | Backend job time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Built-in simulator | 256 | 256 (100%) | 85.1% | 3.9% | 0.053s |
+| IBM noise model (Boston) | 64 | 26 (40.6%) | 81.4% | 0.0% | 34.741s |
+| IonQ simulator (Aria 2) | 64 | 14 (21.9%) | 83.7% | 0.0% | 14.701s |
+
+Highlights: greedy misses the optimum on the synthetic and Comuna 4 cases; QAOA amplifies the optimum relative to random selection on the synthetic and full-city cases but not on Comuna 4; remote backends return shots that break the exactly-K constraint, which the adapter rejects. With 8 qubits, exhaustive classical search solves every case instantly — these runs measure solution quality and sampling behaviour, not a quantum speedup.
+
+![Actual coverage by method](docs/results/coverage.png)
+![CABA Comuna 4: greedy vs exact map](docs/results/map_caba-comuna4.png)
 
 ## Input-driven core and quantum adapter
 
@@ -45,7 +82,8 @@ job. It rejects invalid shots before choosing by actual union coverage.
 The shared [case/result contract](docs/CONTRACT.md) documents stable IDs,
 revision/fingerprint checks, bounds, timings and the JSON-string JS/Python
 bridge. [Local validation](docs/LOCAL_VALIDATION.md) records what was tested
-and which actual Qollab checks remain. `examples/qollab_smoke.py` is a
+locally; `docs/PROJECT_PAGE.md` records the actual Qollab runs.
+`examples/qollab_smoke.py` is a
 Python-only Qollab entrypoint example, not the final UI.
 
 ```bash
