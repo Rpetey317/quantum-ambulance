@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "meta": {
+    "id": "synthetic-baseline",
+    "revision": 1,
+    "name": "Original synthetic eight-site demonstration",
+    "crs": "local Cartesian plane",
+    "coordinate_units": "km",
+    "weight_units": "thousand people",
+    "zone_resolution": "one synthetic weighted point per zone",
+    "sources": [
+      {
+        "name": "baseline.py synthetic example",
+        "url": "baseline.py",
+        "license": "MIT"
+      }
+    ],
+    "license_note": "Synthetic example from this MIT-licensed repository; not real city data."
+  },
+  "radius_km": 3.0,
+  "k_default": 3,
+  "zones": [
+    {
+      "id": "0",
+      "x_km": 1.78,
+      "y_km": 7.39,
+      "weight": 63
+    },
+    {
+      "id": "1",
+      "x_km": 6.65,
+      "y_km": 7.93,
+      "weight": 66
+    },
+    {
+      "id": "2",
+      "x_km": 4.61,
+      "y_km": 7.41,
+      "weight": 164
+    },
+    {
+      "id": "3",
+      "x_km": 6.98,
+      "y_km": 8.69,
+      "weight": 159
+    },
+    {
+      "id": "4",
+      "x_km": 7.44,
+      "y_km": 6.24,
+      "weight": 245
+    },
+    {
+      "id": "5",
+      "x_km": 2.22,
+      "y_km": 9.49,
+      "weight": 133
+    },
+    {
+      "id": "6",
+      "x_km": 2.72,
+      "y_km": 1.54,
+      "weight": 227
+    },
+    {
+      "id": "7",
+      "x_km": 0.63,
+      "y_km": 2.21,
+      "weight": 167
+    },
+    {
+      "id": "8",
+      "x_km": 5.3,
+      "y_km": 6.01,
+      "weight": 76
+    },
+    {
+      "id": "9",
+      "x_km": 8.57,
+      "y_km": 6.31,
+      "weight": 145
+    },
+    {
+      "id": "10",
+      "x_km": 7.45,
+      "y_km": 7.56,
+      "weight": 191
+    },
+    {
+      "id": "11",
+      "x_km": 0.82,
+      "y_km": 7.34,
+      "weight": 232
+    },
+    {
+      "id": "12",
+      "x_km": 4.0,
+      "y_km": 8.25,
+      "weight": 150
+    },
+    {
+      "id": "13",
+      "x_km": 5.13,
+      "y_km": 7.23,
+      "weight": 235
+    },
+    {
+      "id": "14",
+      "x_km": 4.78,
+      "y_km": 10.89,
+      "weight": 62
+    }
+  ],
+  "sites": [
+    {
+      "id": "0",
+      "x_km": 4.63,
+      "y_km": 1.72
+    },
+    {
+      "id": "1",
+      "x_km": 3.37,
+      "y_km": 3.95
+    },
+    {
+      "id": "2",
+      "x_km": 2.28,
+      "y_km": 7.15
+    },
+    {
+      "id": "3",
+      "x_km": 10.65,
+      "y_km": 8.67
+    },
+    {
+      "id": "4",
+      "x_km": 3.67,
+      "y_km": 4.16
+    },
+    {
+      "id": "5",
+      "x_km": 8.42,
+      "y_km": 7.39
+    },
+    {
+      "id": "6",
+      "x_km": 6.36,
+      "y_km": 9.73
+    },
+    {
+      "id": "7",
+      "x_km": 10.9,
+      "y_km": 6.11
+    }
+  ]
+}
