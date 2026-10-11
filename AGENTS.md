@@ -6,5 +6,5 @@
 - Preserve the distinction between the pairwise quadratic QAOA cost approximation and actual union-of-zones population coverage. Compare final selections using actual coverage and retain greedy/exact baselines for small instances.
 - The Dicke initial state and XY mixer maintain exactly `K` selected sites; preserve that constraint if changing the circuit. Site indices in printed results are zero-based; Qiskit bitstrings are reversed when mapped to site indices.
 - Be precise about claims: the pitch's 8-site example demonstrates solution quality and sampling probability, not a proven quantum speedup. Avoid representing a simple distance-radius model as actual emergency response time.
-- For the existing prototype, the documented dependencies are Python with Qiskit 2.5.2, NumPy, and SciPy; run `python baseline.py` to check changes. There is no CI or automated test command yet.
+- For the existing prototype, the documented dependencies are Python with Qiskit 2.5.2, NumPy, and SciPy; run `python baseline.py` to check changes. Run `python -m unittest discover -s tests -v` for the deterministic suite (see `docs/TESTING.md`); CI runs it on every PR.
 - The project is MIT-licensed (`LICENSE`). The pitch requests attribution for prior code and AI assistance in the hackathon submission; verify disclosures against actual work before publishing.

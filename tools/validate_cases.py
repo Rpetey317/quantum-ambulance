@@ -52,7 +52,8 @@ def validate(path):
     name = os.path.basename(path)
     print(f"== {name}")
     try:
-        case = json.load(open(path, encoding="utf-8"))
+        with open(path, encoding="utf-8") as f:
+            case = json.load(f)
     except Exception as e:
         fail(errors, f"no se pudo parsear JSON: {e}")
         return errors
