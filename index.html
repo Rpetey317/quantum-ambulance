@@ -1,0 +1,136 @@
+<div id="app">
+  <header class="masthead">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">+</span> Quantum ambulance
+    </div>
+    <h1>Where should the next bases go?</h1>
+    <p>Place candidate bases. Compare the population within reach.</p>
+  </header>
+  <main>
+    <div class="case-bar">
+      <label
+        >Study area
+        <select id="dataset">
+          <option value="caba-comuna4">Buenos Aires · Comuna 4</option>
+          <option value="caba">Buenos Aires · full city</option>
+          <option value="synthetic">Original synthetic example</option>
+        </select></label
+      >
+      <span id="case-summary" aria-live="polite">Loading the study area…</span>
+    </div>
+    <p id="error" class="error" role="alert" hidden></p>
+    <section class="workspace" aria-label="Candidate base editor">
+      <div class="map-column">
+        <div class="map-heading">
+          <h2>Candidate bases</h2>
+          <span id="map-method">Greedy coverage</span>
+        </div>
+        <div
+          id="map"
+          class="map"
+          aria-label="Metric map of demand zones and candidate bases"
+        >
+          <canvas aria-hidden="true"></canvas>
+          <div class="markers"></div>
+          <div id="map-empty" class="map-empty">Loading demand zones…</div>
+        </div>
+        <div class="map-key">
+          <span><i class="dot"></i> Demand centroid</span
+          ><span><i class="ring"></i> Selected base & radius</span
+          ><span>North ↑ · coordinates in km</span>
+        </div>
+        <p class="map-note">
+          Drag a numbered candidate, or enter coordinates. The frame is the
+          dataset extent, not a city border. Straight-line distance is not
+          travel time.
+        </p>
+      </div>
+      <aside class="editor">
+        <h2>Edit this case</h2>
+        <div class="paired">
+          <label
+            >Bases to choose (K)<input
+              id="k"
+              type="number"
+              min="1"
+              max="8"
+              step="1" /></label
+          ><label
+            >Radius (km)<input id="radius" type="number" min="0.001" step="0.1"
+          /></label>
+        </div>
+        <label
+          >Candidate
+          <select id="candidate"></select
+        ></label>
+        <p id="seed-note" class="muted"></p>
+        <form id="coordinates">
+          <div class="paired">
+            <label
+              >Easting x (km)<input
+                id="x"
+                type="number"
+                step="any"
+                required /></label
+            ><label
+              >Northing y (km)<input id="y" type="number" step="any" required
+            /></label>
+          </div>
+          <button type="submit" class="secondary">Apply coordinates</button>
+        </form>
+        <div class="paired actions">
+          <button id="add" class="secondary">Add candidate</button
+          ><button id="remove" class="secondary">Remove candidate</button>
+        </div>
+        <p id="site-limit" class="muted"></p>
+        <hr />
+        <label
+          >Quantum shots
+          <input id="shots" type="number" value="64" min="1" max="128" step="1"
+        /></label>
+        <button id="run" class="primary" disabled>
+          Run QAOA on selected backend
+        </button>
+        <p id="backend-note" class="muted">Checking the selected backend…</p>
+        <button id="reset" class="text-button">Reset this dataset</button>
+      </aside>
+    </section>
+    <section class="comparison" aria-labelledby="comparison-heading">
+      <div class="section-heading">
+        <h2 id="comparison-heading">Compare the same case</h2>
+        <p id="revision-note">Classical previews update after every edit.</p>
+      </div>
+      <div id="methods" class="methods"></div>
+      <p class="model-note">
+        Coverage counts each zone once, using the same total population. QAOA
+        tunes a pairwise approximation locally; its best valid sample is ranked
+        by actual coverage. Backend wall time includes the full wait for a
+        result. These measurements do not demonstrate quantum speedup.
+      </p>
+    </section>
+    <details class="source-details">
+      <summary>Data, limits & portable case</summary>
+      <div id="provenance"></div>
+      <p>
+        Qollab Stop or a new Run clears edits. Copy this JSON before resetting;
+        paste it below to restore candidate positions, K and radius on the
+        matching packaged dataset.
+      </p>
+      <label
+        >Portable case JSON<textarea
+          id="snapshot"
+          rows="5"
+          spellcheck="false"
+        ></textarea>
+      </label>
+      <div class="paired actions">
+        <button id="export" class="secondary">Show current case JSON</button
+        ><button id="restore" class="secondary">Restore candidate edits</button>
+      </div>
+    </details>
+  </main>
+  <footer>
+    Research demonstration · Synthetic or census population proxy · No
+    operational dispatch or hardware claim
+  </footer>
+</div>

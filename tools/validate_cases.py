@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Valida los casos de data/cases/*.json contra el contrato (issue #3).
+Valida los casos de data/cases/*.json contra el contrato (issues #2 y #3).
 
 Chequea:
   - campos requeridos (meta completo, radius_km>0, k_default entero 1..N sitios)
   - ids unicos, pesos > 0, coordenadas finitas, sin duplicados (<1 m)
   - sitios dentro/near de la nube de zonas (los bounds de CABA en EPSG:9498)
+    y que cada sitio cubra >=1 zona: solo advertencias (WARN), porque el
+    contrato los permite y el ejemplo sintetico original los tiene; los
+    casos CABA los exigen en tests/test_cases_data.py
   - tamaño de archivo (los assets se empaquetan en el proyecto Qollab)
-  - sanity de cobertura: cada sitio cubre >=1 zona; cobertura union real y
+  - sanity de cobertura: cobertura union real y
     greedy con la misma matematica que baseline.py (distancia euclidea en km)
 
 Sale con codigo != 0 si alguna validacion falla.
@@ -23,18 +26,25 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CASES_GLOB = os.path.join(ROOT, "data", "cases", "*.json")
 
+# Campos comunes a todo caso (docs/CONTRACT.md). Los casos generados por
+# build_cases.py traen ademas procedencia extra (generator, generated_at_utc,
+# weight_source, site_selection, sources[].key/dataset_page), que se chequea en
+# tests/test_cases_data.py solo para esos casos.
 REQUIRED_META = (
-    "id", "revision", "name", "generated_at_utc", "generator", "crs",
-    "coordinate_units", "weight_units", "weight_source", "zone_resolution",
-    "site_selection", "sources", "license_note",
+    "id", "revision", "name", "crs", "coordinate_units", "weight_units",
+    "zone_resolution", "sources", "license_note",
 )
-REQUIRED_SOURCE = ("key", "name", "url", "dataset_page", "license")
+REQUIRED_SOURCE = ("name", "url", "license")
 MAX_SIZE_KB = 1024  # los assets viajan dentro del proyecto Qollab
 
 
 def fail(errors, msg):
     errors.append(msg)
     print("  FAIL", msg)
+
+
+def warn(msg):
+    print("  WARN", msg)
 
 
 def coverage(zones, site, radius_km):
@@ -113,7 +123,7 @@ def validate(path):
     bx, by = (min(xs) - 2, max(xs) + 2), (min(ys) - 2, max(ys) + 2)
     for s in sites:
         if not (bx[0] <= s["x_km"] <= bx[1] and by[0] <= s["y_km"] <= by[1]):
-            fail(errors, f"sitio {s['id']} fuera de bounds {bx}x{by}")
+            warn(f"sitio {s['id']} fuera de bounds {bx}x{by}")
 
     # tamaño del asset (empaquetado en Qollab)
     kb = os.path.getsize(path) / 1024
@@ -124,7 +134,7 @@ def validate(path):
     cubre = [coverage(zones, s, radius) for s in sites]
     for s, c in zip(sites, cubre):
         if not c:
-            fail(errors, f"sitio {s['id']} no cubre ninguna zona")
+            warn(f"sitio {s['id']} no cubre ninguna zona")
     def cubierto(sel):
         ids = set().union(*[cubre[i] for i in sel]) if sel else set()
         return union_weight(zones, ids)
