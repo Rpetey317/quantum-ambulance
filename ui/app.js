@@ -248,7 +248,7 @@ export function mount(root, transport) {
       ? "QAOA running…"
       : "Run QAOA on selected backend";
     $("#backend-note").textContent = state.backend
-      ? `${state.backend.name || state.backend.class || "Selected backend"}. ${policy.unsupported ? "Only identified IonQ simulators are enabled. Select a simulator in a new Qollab Run." : policy.singleJob && controller.sessionReserved ? "This session’s quantum attempt is used. Copy your case and start a new Qollab Run to sample again." : `${policy.shotCap} shots maximum. ${policy.singleJob ? "One quantum attempt per Qollab Run." : "One sampled job per click."}`}`
+      ? `${state.backend.name || state.backend.class || "Selected backend"}. ${data?.sites.length > policy.siteCap ? `QAOA on this backend supports up to ${policy.siteCap} candidates; classical comparisons remain available.` : policy.unsupported ? "Only identified IonQ simulators are enabled. Select a simulator in a new Qollab Run." : policy.singleJob && controller.sessionReserved ? "This session’s quantum attempt is used. Copy your case and start a new Qollab Run to sample again." : `${policy.shotCap} shots maximum. ${policy.singleJob ? "One quantum attempt per Qollab Run." : "One sampled job per click."}`}`
       : state.backendError
         ? `Backend unavailable: ${state.backendError}. Start a Qollab Run and select a supported simulator.`
         : "Checking the selected backend…";

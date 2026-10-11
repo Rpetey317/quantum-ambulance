@@ -1,0 +1,15 @@
+.git
+.vercel
+.venv
+.env*
+.gstack
+branding
+pitch
+qollab-spike
+data/raw
+docs
+tests
+Idea.pdf
+__pycache__
+**/__pycache__
+dist

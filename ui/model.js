@@ -160,7 +160,10 @@ export function backendPolicy(info) {
     );
   return {
     singleJob: !knownLocal,
-    shotCap: ionq ? 128 : 4096,
+    shotCap: Number.isInteger(info?.shot_cap) && info.shot_cap > 0
+      ? Math.min(info.shot_cap, ionq ? 128 : 4096) : ionq ? 128 : 4096,
+    siteCap: Number.isInteger(info?.site_cap) && info.site_cap > 0
+      ? Math.min(info.site_cap, SITE_CAP) : SITE_CAP,
     unsupported: ionq && info?.is_simulator !== true,
   };
 }

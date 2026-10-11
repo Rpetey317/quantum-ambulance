@@ -175,6 +175,7 @@ export class Controller {
       this.state.previewState === "ok" &&
       !this.state.busy &&
       !!this.state.backend &&
+      (this.state.data?.sites.length ?? 0) <= policy.siteCap &&
       !policy.unsupported &&
       !(policy.singleJob && this.sessionReserved)
     );
