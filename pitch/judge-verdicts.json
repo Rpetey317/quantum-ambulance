@@ -1,0 +1,175 @@
+{
+  "evaluators": "AI personas, not the named people",
+  "rounds": [
+    {
+      "round": 1,
+      "status": "judged",
+      "url": "https://pitchr.studio/pitch/98be8ecb-39b9-4293-9a5d-2ef4cbbd2b8e",
+      "verdicts": [
+        {
+          "judge": "Linus Torvalds AI",
+          "score": 2,
+          "what_doesnt_work": "El 'quantum speedup' no está probado y la parte cuántica no ofrece un beneficio discernible sobre los métodos clásicos actuales. La propuesta comercial se basa en una funcionalidad que ya existe.",
+          "biggest_risk": "El riesgo principal es la falta de diferenciación técnica y comercial. Si la solución es clásica, compite con software establecido sin una ventaja clara. Si es cuántica, carece de fundamento técnico probado.",
+          "key_question": "¿Cuál es la innovación técnica *real* de la solución que no puede ser replicada por algoritmos clásicos optimizados y bien comprendidos hoy?",
+          "final_verdict": "Este es un prototipo de hackathon interesante como ejercicio de investigación, pero no como una base para una empresa. La parte 'quantum' no está justificada por ningún beneficio técnico o comercial demostrado, y la propuesta de valor es genérica y replicable con tecnología existente.",
+          "criteria_scores": [
+            {
+              "name": "Arquitectura Técnica",
+              "score": 2,
+              "comment": "La arquitectura cuántica es experimental y su utilidad es cuestionable para el problema planteado, sin ventaja probada. La parte clásica es estándar."
+            },
+            {
+              "name": "Eficiencia de Recursos",
+              "score": 2,
+              "comment": "No hay evidencia de que la solución cuántica sea más eficiente que las clásicas para los casos grandes. De hecho, el fundador admite lo contrario en casos pequeños."
+            },
+            {
+              "name": "Seguridad y Estabilidad",
+              "score": 3,
+              "comment": "Es un prototipo. La estabilidad de un sistema cuántico en producción es una incógnita. Un 'test bed' clásico sería más estable por definición."
+            }
+          ],
+          "issued_at": "2026-10-11T18:34:25.280513+00:00"
+        },
+        {
+          "judge": "Peter Thiel AI",
+          "score": 1,
+          "what_doesnt_work": "La propuesta de valor central se basa en una tecnología —la computación cuántica— que el propio fundador admite que no tiene una ventaja probada sobre las soluciones clásicas existentes. Es una solución en busca de un problema que justifique su complejidad.",
+          "biggest_risk": "El riesgo fundamental es que el producto nunca encuentre una ventaja real sobre los métodos clásicos. Las agencias de emergencia no pagarán una prima por una tecnología experimental que ofrece, en el mejor de los casos, los mismos resultados que sus herramientas actuales.",
+          "key_question": "¿Por qué un cliente debería cambiar su sistema actual, que funciona, por este, que es experimental y no ofrece un beneficio probado?",
+          "final_verdict": "Esto es un ejercicio académico interesante, no una empresa viable. Admite abiertamente que la tecnología central es una hipótesis y que el valor comercial ya puede ser entregado por herramientas existentes. Sin un beneficio fundamental y único, no hay negocio.",
+          "criteria_scores": [
+            {
+              "name": "Potencial de Monopolio",
+              "score": 1,
+              "comment": "Cero. El fundador admite que no hay 'moat' y que los 'solvers' clásicos ya resuelven el problema. Es la definición de un producto competidor, no un monopolio."
+            },
+            {
+              "name": "Pensamiento Contrariano",
+              "score": 1,
+              "comment": "No hay ninguna verdad oculta aquí. La idea es optimizar la ubicación de ambulancias, un problema conocido con soluciones existentes. Usar 'quantum' es una distracción técnica, no una visión de mercado."
+            },
+            {
+              "name": "Zero to One",
+              "score": 1,
+              "comment": "Esto es tomar un problema conocido (de N a N+1) y aplicarle una tecnología experimental (de 0 a 0.1) que no ha demostrado superioridad. Es lo opuesto a crear algo nuevo."
+            }
+          ],
+          "issued_at": "2026-10-11T18:38:57.822165+00:00"
+        },
+        {
+          "judge": "Marcos Galperin AI",
+          "score": 1,
+          "what_doesnt_work": "No hay clientes, no hay validación del mercado, y no hay un plan concreto de adquisición de clientes. La idea de un 'piloto' es una hipótesis, no el resultado de una conversación real con un operador que tenga un problema concreto y presupuesto para resolverlo.",
+          "biggest_risk": "El riesgo principal es la irrelevancia. La tecnología cuántica no ofrece una ventaja probada, y las soluciones clásicas ya existen. El proyecto corre el riesgo de ser un ejercicio académico sin aplicación práctica que un cliente esté dispuesto a pagar.",
+          "key_question": "¿Cuál es el dolor real y urgente de un operador de emergencias que las soluciones actuales no resuelven y por el que estarían dispuestos a pagar hoy, incluso por una versión no cuántica de tu producto?",
+          "final_verdict": "Es un prototipo de hackathon honesto, pero no es un negocio. La propuesta de valor es débil porque la tecnología central no está probada y admite que los métodos clásicos ya resuelven el problema. No hay evidencia de tracción ni de encaje con el mercado.",
+          "criteria_scores": [
+            {
+              "name": "Foso Defensivo (Moat)",
+              "score": 1,
+              "comment": "Inexistente. No hay tecnología propietaria con ventaja real, ni acuerdos de datos, ni efectos de red. Un competidor con un buen algoritmo clásico puede replicarlo mañana."
+            },
+            {
+              "name": "Resiliencia de Ejecución",
+              "score": 2,
+              "comment": "El fundador es honesto y directo, lo cual es bueno. Sin embargo, no hay evidencia de haber enfrentado el mercado real. Todo es teórico, falta calle."
+            },
+            {
+              "name": "Escalabilidad del Negocio",
+              "score": 1,
+              "comment": "No hay un modelo de negocio validado. Sin un canal de adquisición de clientes claro y repetible, no hay forma de escalar. Hoy es un proyecto, no una empresa escalable."
+            }
+          ],
+          "issued_at": "2026-10-11T18:39:06.877242+00:00"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "status": "judged",
+      "url": "https://pitchr.studio/pitch/da5d5d07-c78c-4923-9f7f-b294fb0ae217",
+      "verdicts": [
+        {
+          "judge": "Peter Thiel AI",
+          "score": 1,
+          "what_doesnt_work": "El proyecto es un prototipo de investigación sin una clara validación de mercado. No hay evidencia de que el método cuántico ofrezca una ventaja real sobre los métodos clásicos existentes, ni que los posibles clientes estén dispuestos a pagar por esta solución.",
+          "biggest_risk": "El riesgo principal es la falta de un problema de mercado concreto y la dependencia de una tecnología (computación cuántica) cuya ventaja es aún experimental y no demostrada para este caso de uso.",
+          "key_question": "¿Qué problema específico y cuantificable están resolviendo que los métodos clásicos no pueden resolver de manera eficiente o que los clientes actuales no resuelven a su satisfacción, y cómo validan con evidencia real que un cliente pagaría por esto?",
+          "final_verdict": "Esto es un experimento de hackathon, no una empresa. No hay un producto claro, ni un mercado validado, ni una ventaja competitiva demostrable. Es una solución en busca de un problema y una tecnología en busca de un caso de uso justificado.",
+          "criteria_scores": [
+            {
+              "name": "Potencial de Monopolio",
+              "score": 1,
+              "comment": "No hay potencial de monopolio si no hay un problema único resuelto ni una ventaja clara sobre la competencia. Es un campo atestado de soluciones clásicas."
+            },
+            {
+              "name": "Pensamiento Contrariano",
+              "score": 1,
+              "comment": "No hay una verdad importante revelada. Es un problema conocido ('placement optimization') con una solución experimental que no demuestra superioridad."
+            },
+            {
+              "name": "Zero to One",
+              "score": 1,
+              "comment": "No están creando algo nuevo. Es la aplicación de una tecnología experimental (cuántica) a un problema existente, sin demostrar un salto cualitativo real."
+            }
+          ],
+          "issued_at": "2026-10-11T18:48:21.676367+00:00"
+        },
+        {
+          "judge": "Marcos Galperin AI",
+          "score": 1,
+          "what_doesnt_work": "No hay una ventaja clara y probada del método cuántico sobre las soluciones clásicas existentes. La propuesta carece de validación con clientes reales y no demuestra un problema de mercado concreto que resuelva de manera superior.",
+          "biggest_risk": "El mayor riesgo es la falta de 'product-market fit' y la incapacidad de escalar la distribución. Sin una ventaja diferenciada y clientes dispuestos a pagar, el proyecto no saldrá del estado de prototipo.",
+          "key_question": "¿Cómo se valida la necesidad real del mercado y la superioridad del enfoque cuántico con datos y compromisos de clientes que demuestren una mejora sustancial sobre las alternativas actuales?",
+          "final_verdict": "El proyecto es un ejercicio técnico interesante, pero no presenta un caso de negocio sólido. Carece de tracción real con usuarios y una ventaja competitiva clara. Es una exploración de tecnología, no una empresa lista para crecer.",
+          "criteria_scores": [
+            {
+              "name": "Foso Defensivo (Moat)",
+              "score": 1,
+              "comment": "No hay un foso defensivo evidente. La ventaja cuántica es experimental y los métodos clásicos parecen igualar o superar la solución en los ejemplos dados."
+            },
+            {
+              "name": "Resiliencia de Ejecución",
+              "score": 2,
+              "comment": "El equipo ha construido un prototipo, lo cual es meritorio, pero la falta de contacto con clientes y de validación de mercado muestra una debilidad en la ejecución práctica para el negocio."
+            },
+            {
+              "name": "Escalabilidad del Negocio",
+              "score": 1,
+              "comment": "El modelo no muestra escalabilidad. Sin una propuesta de valor clara y un canal de distribución validado, el crecimiento es puramente especulativo. No hay un camino visible para ir más allá de un piloto único."
+            }
+          ],
+          "issued_at": "2026-10-11T18:48:26.370397+00:00"
+        },
+        {
+          "judge": "Linus Torvalds AI",
+          "score": 2,
+          "what_doesnt_work": "Esto es un prototipo de investigación, no una solución viable. La promesa de la ventaja cuántica no está demostrada y la arquitectura propuesta no resuelve un problema técnico existente de manera superior. La justificación es débil. No hay un caso de mercado real ni tracción que valide la necesidad.",
+          "biggest_risk": "El riesgo principal es que no hay un problema real que la solución cuántica resuelva de manera más eficiente o efectiva que los métodos actuales. Es una búsqueda de una aplicación para una tecnología, no una solución para un problema existente, y sin un 'product-market fit'.",
+          "key_question": "¿Cuál es el costo computacional real (tiempo y recursos) de su método cuántico versus un algoritmo clásico optimizado para los mismos casos y limitaciones, en una escala de problemas relevantes para un operador real, y con qué precisión? ¿Quién pagaría por esto y por qué no lo resuelven hoy con métodos clásicos?",
+          "final_verdict": "Un experimento técnico interesante, pero sin un problema de mercado claro ni una ventaja técnica demostrada sobre soluciones clásicas. No es una empresa viable, sino una investigación prematura.",
+          "criteria_scores": [
+            {
+              "name": "Arquitectura Técnica",
+              "score": 2,
+              "comment": "La arquitectura propuesta es conceptual y la ventaja cuántica no está justificada para este problema. No hay un fundamento sólido para una solución escalable."
+            },
+            {
+              "name": "Eficiencia de Recursos",
+              "score": 1,
+              "comment": "La eficiencia de los recursos es desconocida y altamente cuestionable. Es probable que sea menos eficiente que los métodos clásicos optimizados hasta que la computación cuántica madure significativamente."
+            },
+            {
+              "name": "Seguridad y Estabilidad",
+              "score": 2,
+              "comment": "La seguridad y estabilidad son especulativas. Un sistema cuántico en esta etapa es inherentemente inestable y propenso a errores, sin contar la seguridad de los datos sensibles."
+            }
+          ],
+          "issued_at": "2026-10-11T18:48:30.286777+00:00"
+        }
+      ]
+    }
+  ]
+}

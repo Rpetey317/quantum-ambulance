@@ -1,0 +1,21 @@
+The next life-saving decision might happen before the emergency: where an ambulance waits.
+
+The American Heart Association reports that only 10.5 percent of U.S. out-of-hospital cardiac-arrest patients survived to discharge in 2024. In a German registry analysis, each extra response minute was associated with roughly five percent lower survival odds.
+
+Quantum Ambulance lets planners test candidate base locations before committing resources. Our ambition is better access to emergency care from the fleet a community already has.
+
+Here is Buenos Aires' Comuna 4: 252 census zones, eight candidate sites, three bases, and a 1.8-kilometre radius. Greedy covers 176,818 people. Exact search covers 185,708. That is 8,890 additional modelled residents covered with the same three bases.
+
+These are 2010 census weights and straight-line distances. We curated this candidate subset to expose a greedy gap; it does not establish a citywide improvement or lives saved.
+
+Now we test the quantum method. One qubit represents each candidate. The Dicke initial state and XY mixer preserve exactly three selected sites on noiseless runs. We tune angles locally, submit one sampled job to the selected backend, and count each covered zone once. In this local run, the best sample reaches the exact reference. The panel separates tuning time, backend wait and valid-shot rate.
+
+Move a candidate. The classical comparisons recalculate, and the old quantum result becomes stale. Every comparison belongs to the same case revision.
+
+Here is the full city: 3,552 demand zones, still eight candidates. Greedy already matches exact. At this size, exact search is easy; quantum advantage remains an experimental question. This benchmark lets us measure it rather than assume it.
+
+The proposed buyer is an emergency-service operator's planning team. The business hypothesis is a paid retrospective pilot, then an annual software license. MedPAC reports 5.3 billion dollars in U.S. Medicare ground-ambulance payments in 2024. That is spending context, not our software market or a savings estimate.
+
+Next, we need one operator partner: real call histories, road travel times and fleet availability. We will compare against the current plan and strong classical methods, measuring response-time distributions, neighborhood access and cost. Clinical outcomes need separate validation.
+
+Help us secure that pilot. Let's test whether better placement can help emergency teams reach more people with the resources they already have.

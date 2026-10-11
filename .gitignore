@@ -3,3 +3,7 @@ data/raw/
 
 __pycache__/
 *.pyc
+
+# Regenerable intermediate recordings; the labelled final MP4 is versioned.
+pitch/media/raw/
+pitch/media/*.webm
