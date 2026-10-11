@@ -1,6 +1,6 @@
 # Ambulancias Cuánticas (Quantum Ambulances)
 
-A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a response radius. The current repository is a **proof of concept**, not yet an application: it compares a greedy baseline, an exact classical solution, and QAOA on a small synthetic example.
+A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a limited number of ambulance bases so that the greatest possible population lies within a response radius. The repository contains the original **proof of concept** plus input-driven core and quantum modules for the planned Qollab app. The interactive app is not implemented here yet.
 
 ## The problem and the prototype
 
@@ -30,19 +30,46 @@ The pitch states it was tested with Qiskit 2.5.2, NumPy, and SciPy. Install thos
 python baseline.py
 ```
 
-The script prints the greedy, exact, and sampled QAOA results, the fraction of valid shots, the probability of measuring an optimum relative to random selection, and the five most frequent measured bitstrings. Optimization uses local statevector simulation; `StatevectorSampler` also runs locally. **No IonQ hardware or remote backend integration is present in this repository.** The pitch estimates roughly 1–2 minutes for a simulator run, depending on the environment.
+The script prints the greedy, exact, and sampled QAOA results, the fraction of valid shots, the probability of measuring an optimum relative to random selection, and the five most frequent measured bitstrings. In `baseline.py`, optimization and `StatevectorSampler` run locally. The new adapter accepts a supplied backend and has been checked with local `BasicSimulator`; IonQ circuit/payload conversion was checked offline, with no remote or hardware execution. The pitch estimates roughly 1–2 minutes for the original simulator run, depending on the environment.
 
 To experiment, edit `ZONAS`, `SITIOS`, `RADIO_KM`, `K`, or the circuit settings in `baseline.py`. The data and all derived arrays/circuit state are created at import time, so rerun the script after changing inputs.
 
+## Input-driven core and quantum adapter
+
+`ambulance.core.evaluate_case(case)` validates a case JSON, rebuilds coverage,
+and returns deterministic greedy and bounded exact results. The independent
+`ambulance.quantum.run_qaoa(case, backend, ...)` rebuilds QAOA for edited sites,
+radius and K, optimizes locally, transpiles, and attempts one supplied-backend
+job. It rejects invalid shots before choosing by actual union coverage.
+
+The shared [case/result contract](docs/CONTRACT.md) documents stable IDs,
+revision/fingerprint checks, bounds, timings and the JSON-string JS/Python
+bridge. [Local validation](docs/LOCAL_VALIDATION.md) records what was tested
+and which actual Qollab checks remain. `examples/qollab_smoke.py` is a
+Python-only Qollab entrypoint example, not the final UI.
+
+```bash
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -v
+```
+
+Tests submit no remote or paid jobs. To check only the dependency-free core:
+`python -m unittest discover -s tests -p test_core.py -v`.
+
 ## App direction and limitations
 
-The pitch proposes a project page showing the problem, a map of zones and selected bases, a comparison of methods, plots of measured results, instructions, limitations, and credits. Potential follow-ups include changing the radius or ambulance count, testing multiple instances, using real city data and road travel times, modeling demand over time, and validating compatibility with IonQ simulation or hardware. **These are proposals, not implemented app features.** GCBA seed cases have been prepared in `data/`, but they are not connected to an app; the UI, backend architecture, and deployment have not been selected yet.
+The pitch proposes a project page showing the problem, a map of zones and selected bases, a comparison of methods, plots of measured results, instructions, limitations, and credits. The current issue plan targets a Qollab JS/Qiskit app. Core/quantum functions support changed radius, sites and ambulance count, but no map editor or comparison UI is implemented here yet. Actual Qollab lifecycle and remote-backend behavior remain to be verified by the platform workstream. Road travel times and demand over time are future model extensions.
 
-The QAOA cost is only a pairwise approximation of true union coverage. The baseline's data are synthetic and static, and exact statevector-based angle optimization does not scale to large numbers of sites. Do not describe this prototype as an operational emergency dispatch tool or claim a demonstrated speed advantage over classical methods.
+The QAOA cost is only a pairwise approximation of true union coverage. The original prototype uses synthetic data; the packaged CABA cases use static census-population proxies and curated candidate sites. Exact statevector-based angle optimization does not scale to large numbers of sites. Do not describe this prototype as an operational emergency dispatch tool or claim a demonstrated speed advantage over classical methods.
 
 ## Repository files
 
 - `baseline.py` — executable Qiskit proof of concept (Python; code/comments in Spanish).
+- `ambulance/` — input-driven core, dynamic QAOA adapter, and JSON-string bridge.
+- `data/cases/synthetic.json` — original synthetic inputs in the shared case format.
+- `tests/` — deterministic core and quantum adapter regressions, using local jobs only.
+- `docs/` — integration contract and observed validation.
+- `examples/qollab_smoke.py` — intermediate Python-only Qollab smoke entrypoint.
 - `Idea.pdf` — Spanish pitch, methodology, reported results, hackathon checklist, and proposed presentation.
 - `QOLLAB.md` — Qollab backend notes, job limits, platform-spike validation findings, and the plan for porting `baseline.py`.
 - `qollab-spike/` — local-only JS/Python/one-qubit probe for issue #1 (not committed); not the ambulance app. See `QOLLAB.md` for validation steps.
@@ -50,4 +77,4 @@ The QAOA cost is only a pairwise approximation of true union coverage. The basel
 - `tools/` — `build_cases.py` regenerates the case assets from public datasets (stdlib only); `validate_cases.py` checks the case contract and coverage sanity.
 - `LICENSE` — MIT license.
 
-The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. The only app-like code is the isolated platform spike; the full ambulance app and its test suite are not implemented yet.
+The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. Core/adapter work used OpenAI Codex assistance, as recorded in the contract. No interactive app or CI configuration is present yet.

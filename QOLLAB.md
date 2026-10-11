@@ -51,15 +51,21 @@ counts = job.result().get_counts()
 Qollab is an interactive platform, not a job service. To run circuits from your
 own backend you would integrate the providers directly (see "External option").
 
-## Job limits — already satisfied by `baseline.py`
+## Job limits
 
 - **Local simulators** (built-in, Braket local, IBM noise models): unlimited
   `backend.run` calls per run.
 - **IonQ backends** (remote sims *and* QPUs): **one job per run** — a second job
+<<<<<<< HEAD
   errors out. The platform spike observed this explicitly on the free Aria 1
   simulator while the Qollab Run was still active. This matches the existing
   comment in `muestrear()`. Providers that support multi-circuit jobs accept a
   *list* of circuits in the single `run`.
+=======
+  errors out. The new adapter attempts at most one supplied-backend job;
+  `baseline.py`'s local sampler does not itself prove IonQ compatibility. Providers that
+  support multi-circuit jobs accept a *list* of circuits in the single `run`.
+>>>>>>> 7707ec81281392787005e8284c4e52330980e9ed
 
 Docs: <https://qollab.xyz/learn/docs/compute-backends>
 
@@ -82,8 +88,9 @@ Notes:
 - IonQ remote sims are shot-aware: noise-model simulation runs once per shot, so
   large shot counts take proportionally longer. Test small `shots` first.
 - IonQ recompiles the circuit to native gates before execution; gate count can
-  grow. `qc.initialize()` (the Dicke state) is the risky part — it decomposes
-  into many gates. Fine on local sims; **test on the IonQ Forte sim early**.
+  grow. The prototype's `qc.initialize()` and the adapter's unitary
+  `StatePreparation` both synthesize the Dicke state into many gates. Local and
+  offline serialization checks passed; **test on the IonQ Forte sim early**.
 
 ## What "run on various simulators" means for this project
 
@@ -96,31 +103,35 @@ exactly K sites per simulator — a nice noise-model comparison for the judges).
 
 ## Porting `baseline.py` to a Qollab Python project
 
-Minimal restructure — keep all problem logic and the local optimizer:
+The input-driven port is now available in `ambulance/`; the original script
+remains executable. See [the integration contract](docs/CONTRACT.md).
 
-1. Keep sections 1–5 (data, coverage, greedy/exact, `Q`, `costo`,
-   `circuito_qaoa`, `energia`, `optimizar`, `bits_a_sitios`) as-is. The
-   statevector-based angle optimization is **local classical work** — it does not
-   count as a job and is fine under Pyodide for 8 qubits.
-2. In `muestrear()`, replace the local sampler with the injected backend:
+1. Package `ambulance/`, `data/cases/synthetic.json`, and `requirements.txt`.
+   For an intermediate Python check, copy `examples/qollab_smoke.py` to root
+   `main.py`. The JS app workstream uses the same modules through the bridge.
+2. `run_qaoa(case, backend, ...)` rebuilds all case-dependent quantum inputs,
+   tunes locally, uses unitary Dicke preparation, transpiles at level 1, and
+   attempts a single `backend.run`. The raw original circuit fails on local
+   `BasicSimulator` with unsupported `initialize`; a direct sampler replacement
+   without compilation is insufficient.
+3. `StatevectorSampler` belongs to core Qiskit and does not require Aer. It
+   would sample locally rather than honor the visitor-selected backend, so the
+   port does not use it as a replacement for the Qollab job.
+4. Use an annotated single-line signature such as
+   `def main(shots: int = 64):`. Qollab calls a valid `main()` after executing
+   the script; do not call it yourself as well. Unannotated parameters disable
+   that automatic call and its form.
+5. NumPy, SciPy and Matplotlib are available through Pyodide according to the
+   runtime docs. Circuit graphical drawings need Qiskit Visualizations enabled.
+   Offline charts are an option, not a consequence of Matplotlib being absent.
 
-   ```python
-   def muestrear(params, shots=4096):
-       circ = ansatz.assign_parameters(params)
-       circ.measure_all()
-       job = backend.run(circ, shots=shots)   # one job: IonQ-safe
-       return job.result().get_counts()
-   ```
+Local built-in-style simulator runs and offline IonQ payload conversion passed;
+actual Qollab browser/lifecycle and IonQ remote smoke checks remain pending.
+Start those with 64 shots. The adapter caps identified IonQ simulators at 128
+shots as a conservative application policy and disables IonQ hardware.
 
-   (`StatevectorSampler` is not available on Qollab — there is no Aer; the
-   built-in `BasicSimulator` backend is what a local run hands you.)
-3. Wrap the `__main__` block in `def main(shots=4096):` so the Shots field
-   appears in the Run dialog, and pass `shots` through to `muestrear`.
-4. Qollab entrypoint convention: `main.py` top-level code runs on Run; guard or
-   call `main()` at the bottom as the docs' starter does.
-5. `requirements.txt`: `numpy`, `scipy` (Qiskit 2.x ships with the runtime).
-   Skip matplotlib — not guaranteed in Pyodide; generate charts offline and ship
-   them as images on the project page instead.
+Docs: <https://qollab.xyz/learn/docs/runtime-environment>,
+<https://qollab.xyz/learn/docs/transpilation>
 
 ## App options
 
