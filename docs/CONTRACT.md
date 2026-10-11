@@ -168,9 +168,12 @@ No queue or execution-only timing is invented.
 
 ## Qollab JS integration
 
-Keep the `ambulance/` package and `data/cases/synthetic.json` at project root.
-The app/scaffold workstream owns root `index.html`, `main.js`, and `main.css`.
-The JSON-string bridge avoids dict/Map conversion ambiguity in JavaScript:
+Keep the `ambulance/` package and all `data/cases/*.json` assets at project root.
+The minimal root `index.html`, `main.js`, and `main.css` now mount reusable `ui/`
+modules; see [UI.md](UI.md) for packaging and transport integration.
+The JSON-string bridge avoids dict/Map conversion ambiguity in JavaScript.
+`case_data(id)` loads `synthetic`, `caba-comuna4` or `caba` using literal asset
+paths. `describe_backend(backend)` returns best-effort identity without jobs:
 
 ```javascript
 import * as model from 'ambulance.bridge';
