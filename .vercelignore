@@ -3,6 +3,7 @@
 .venv
 .env*
 .gstack
+.ruff_cache
 branding
 pitch
 qollab-spike

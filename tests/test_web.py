@@ -88,11 +88,12 @@ class WebTests(unittest.TestCase):
 
         def request(method, url, raw=None, headers=None):
             connection = http.client.HTTPConnection(*server.server_address)
-            connection.request(method, url, raw, headers or {})
-            response = connection.getresponse()
-            status, data = response.status, json.loads(response.read())
-            connection.close()
-            return status, data
+            try:
+                connection.request(method, url, raw, headers or {})
+                response = connection.getresponse()
+                return response.status, json.loads(response.read())
+            finally:
+                connection.close()
 
         try:
             status, data = request("GET", "/api")
@@ -104,7 +105,9 @@ class WebTests(unittest.TestCase):
             self.assertEqual(request("POST", "/api?action=preview", "{}", {})[0], 415)
             self.assertEqual(request("POST", "/api?action=unknown", "{}", headers)[0], 400)
             self.assertEqual(request("POST", "/api", "{}", {**headers, "Origin": "https://other.example"})[0], 403)
-            self.assertEqual(request("POST", "/api", "x" * 2_000_001, headers)[0], 413)
+            # Rejection occurs from headers, before a body is read. Sending a
+            # large body after rejection can race the connection close on Linux.
+            self.assertEqual(request("POST", "/api", "", {**headers, "Content-Length": "2000001"})[0], 413)
             status, data = request("POST", "/api?action=preview", json.dumps(load_case()), headers)
             self.assertEqual(status, 200)
             self.assertEqual(data["exact"]["covered_weight"], 2086)
