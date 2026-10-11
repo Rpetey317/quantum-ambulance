@@ -14,6 +14,7 @@
           <option value="caba-comuna4">Buenos Aires · Comuna 4</option>
           <option value="caba">Buenos Aires · full city</option>
           <option value="synthetic">Original synthetic example</option>
+          <option value="imported" disabled>Imported case</option>
         </select></label
       >
       <span id="case-summary" aria-live="polite">Loading the study area…</span>
@@ -23,7 +24,17 @@
       <div class="map-column">
         <div class="map-heading">
           <h2>Candidate bases</h2>
-          <span id="map-method">Greedy coverage</span>
+          <div class="map-controls">
+            <label
+              >Show on map
+              <select id="map-algorithm" aria-label="Show algorithm on map">
+                <option value="greedy">Greedy</option>
+                <option value="exact">Bounded exact</option>
+                <option value="qaoa" disabled>QAOA</option>
+              </select></label
+            >
+            <span id="map-method">Greedy coverage</span>
+          </div>
         </div>
         <div
           id="map"
@@ -92,6 +103,10 @@
           Run QAOA on selected backend
         </button>
         <p id="backend-note" class="muted">Checking the selected backend…</p>
+        <div class="copy-action">
+          <button id="copy" class="text-button">Copy current case</button>
+          <p id="copy-status" class="muted" role="status"></p>
+        </div>
         <button id="reset" class="text-button">Reset this dataset</button>
       </aside>
     </section>
@@ -108,25 +123,29 @@
         result. These measurements do not demonstrate quantum speedup.
       </p>
     </section>
-    <details class="source-details">
-      <summary>Data, limits & portable case</summary>
-      <div id="provenance"></div>
+    <section class="case-transfer" aria-label="Import and export a case">
       <p>
-        Qollab Stop or a new Run clears edits. Copy this JSON before resetting;
-        paste it below to restore candidate positions, K and radius on the
-        matching packaged dataset.
+        Qollab Stop or a new Run clears edits. Copy the current case before
+        resetting. Load JSON to use a complete case, including its demand zones;
+        Restore candidate edits applies only candidate positions, K and radius
+        to a matching packaged dataset.
       </p>
       <label
-        >Portable case JSON<textarea
+        >Import/Export case<textarea
           id="snapshot"
           rows="5"
           spellcheck="false"
         ></textarea>
       </label>
-      <div class="paired actions">
+      <div class="case-actions actions">
         <button id="export" class="secondary">Show current case JSON</button
+        ><button id="load-json" class="secondary">Load JSON</button
         ><button id="restore" class="secondary">Restore candidate edits</button>
       </div>
+    </section>
+    <details class="source-details">
+      <summary>About the data</summary>
+      <div id="provenance"></div>
     </details>
   </main>
   <footer>

@@ -94,8 +94,19 @@ Actual Qollab and IonQ remote checks have **not** been run by this implementatio
   come directly from the contract; queue/execution-only estimates are not
   invented. Optimum probabilities require a matching exact result; otherwise
   they read “Not evaluated”. Approximate QAOA energy is never coverage.
-- Manual copy/restore avoids unavailable Qollab persistent storage. Source
-  assets retain GCBA/INDEC attribution and CC-BY-2.5-AR provenance.
+- The map selector and the comparison cards both choose the showcased current
+  solution; unavailable or stale methods are disabled in the selector. A stale
+  QAOA selection falls back to a current classical layer when available.
+- Copy current case writes the full JSON to the clipboard when allowed, or
+  selects it in the import/export box for manual copying. Load JSON validates
+  a complete pasted case through Python before replacing the current case;
+  Reset returns to that imported snapshot. Restore candidate edits instead
+  reloads the matching packaged dataset and applies only sites, K and radius.
+  No input is persisted between Qollab Runs. About the data displays English
+  explanations for bundled Spanish metadata without changing exported assets,
+  source names or license strings; arbitrary imported metadata is displayed
+  as supplied. Source assets retain GCBA/INDEC attribution and CC-BY-2.5-AR
+  provenance.
 
 ## Observed validation
 

@@ -159,6 +159,68 @@ test("portable restore keeps trusted zones/provenance and refuses coordinate-sys
   saved.meta.crs = "EPSG:4326";
   assert.throws(() => restoreFields(source, saved), /coordinate system/);
 });
+test("complete JSON import replaces the case, retains its zones and invalidates quantum", async () => {
+  const c = new Controller(transport());
+  await c.init();
+  await c.run(8);
+  const imported = clone(source);
+  imported.meta.id = "imported-case";
+  imported.meta.revision = "draft-3";
+  imported.zones[0].weight = 321;
+  imported.sites[0].x_km += 0.1;
+  assert.equal(await c.importCase(imported), true);
+  assert.equal(c.state.data.meta.id, "imported-case");
+  assert.equal(c.state.data.meta.revision, "draft-3");
+  assert.equal(c.state.data.zones[0].weight, 321);
+  assert.equal(c.state.data.sites[0].x_km, imported.sites[0].x_km);
+  assert.equal(c.state.quantumState, "stale");
+  imported.zones[0].weight = 1;
+  assert.equal(c.state.data.zones[0].weight, 321);
+});
+test("invalid or failed JSON imports leave the current case and results intact", async () => {
+  const c = new Controller(
+    transport({
+      preview: async (data) => {
+        if (data.meta.id === "bad-case") throw new Error("Invalid case metadata");
+        return preview(data);
+      },
+    }),
+  );
+  await c.init();
+  const prior = c.state.data;
+  const invalid = clone(source);
+  invalid.sites[1].id = invalid.sites[0].id;
+  assert.equal(await c.importCase(invalid), false);
+  assert.equal(c.state.data, prior);
+  assert.equal(c.state.previewState, "ok");
+  const failed = clone(source);
+  failed.meta.id = "bad-case";
+  assert.equal(await c.importCase(failed), false);
+  assert.equal(c.state.data, prior);
+  assert.match(c.state.error, /Invalid case metadata/);
+});
+test("an in-flight JSON import cannot overwrite a newer edit", async () => {
+  const incoming = deferred();
+  const c = new Controller(
+    transport({
+      preview: (data) =>
+        data.meta.id === "imported-case"
+          ? incoming.promise
+          : Promise.resolve(preview(data)),
+    }),
+  );
+  await c.init();
+  const imported = clone(source);
+  imported.meta.id = "imported-case";
+  const loading = c.importCase(imported);
+  await c.edit((data) => {
+    data.k = 2;
+  });
+  incoming.resolve(preview(imported));
+  assert.equal(await loading, false);
+  assert.equal(c.state.data.k, 2);
+  assert.equal(c.state.data.meta.id, source.meta.id);
+});
 test("late previews cannot replace newer edits", async () => {
   const requests = [];
   const c = new Controller(

@@ -6,11 +6,29 @@ import {
   removeSite,
   backendPolicy,
   restoreFields,
+  clone,
 } from "./model.js";
 import { MetricMap } from "./map.js";
 
 const colors = { greedy: "#a85912", exact: "#007d83", qaoa: "#7150ad" };
 const names = { greedy: "Greedy", exact: "Bounded exact", qaoa: "QAOA" };
+const dataTranslations = {
+  "EPSG:9498 POSGAR 2007 / CABA 2019 (metros, Transverse Mercator)":
+    "EPSG:9498 POSGAR 2007 / CABA 2019 (metres, Transverse Mercator)",
+  "un punto por radio censal (centroide), sin agregacion; 252 zonas":
+    "One point per census tract (centroid), without aggregation; 252 zones.",
+  "un punto por radio censal (centroide), resolucion completa; 3552 zonas con poblacion > 0; 2 radios sin poblacion excluidos (Palermo, Puerto Madero)":
+    "One point per census tract (centroid), at full resolution; 3,552 populated zones. Two zero-population tracts (Palermo and Puerto Madero) are excluded.",
+  "TOTAL_POB por radio censal, Censo Nacional 2010 (INDEC/GCBA)":
+    "TOTAL_POB population per census tract, 2010 National Census (INDEC/GCBA).",
+  "8 de 11 instituciones reales de la comuna (cap app = 8 sitios): subconjunto que maximiza la brecha greedy-vs-exacto a este radio, para que el caso discrimine metodos. Omitidos: Estacion III Barracas; Voluntarios de La Boca; Voluntarios de Nueva Pompeya y Barracas Sur":
+    "Eight of 11 real institutions in the district (app limit: eight sites): a subset chosen to maximize the greedy-versus-exact gap at this radius. Excluded: Estación III Barracas; Voluntarios de La Boca; Voluntarios de Nueva Pompeya y Barracas Sur.",
+  "17 candidatos (hospitales de agudos/ninos con guardia), curados a 8 por k-centro":
+    "Seventeen candidate acute-care and children's hospitals with emergency departments, reduced to eight using k-center.",
+  "Derivado de datos abiertos GCBA (CC-BY-2.5-AR): atribuir a GCBA/INDEC. El Censo 2022 existe a nivel comuna/radio (IDECBA); este caso usa 2010 por disponibilidad del archivo.":
+    "Derived from GCBA open data (CC-BY-2.5-AR): credit GCBA/INDEC. Census 2022 data exists at district/tract level (IDECBA); this case uses 2010 because that dataset was available.",
+};
+const translateData = (text) => dataTranslations[text] || text;
 const number = (value) =>
   new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(value);
 const seconds = (value) =>
@@ -32,7 +50,8 @@ export function mount(root, transport) {
   let active = null,
     method = "greedy",
     nextSite = 1,
-    currentDataset = "caba-comuna4";
+    currentDataset = "caba-comuna4",
+    importedCase = null;
   const map = new MetricMap(
     $("#map"),
     (id) => {
@@ -71,10 +90,22 @@ export function mount(root, transport) {
         : "Loading demand zones…";
     if (data && !data.sites.some((p) => p.id === active))
       active = data.sites[0].id;
+    const available = (key) => {
+      const result = key === "qaoa" ? state.quantum : comparison?.[key];
+      return (
+        state.previewState === "ok" &&
+        (key !== "qaoa" || state.quantumState === "ok") &&
+        result?.status === "ok" &&
+        matches(result, comparison)
+      );
+    };
+    for (const key of ["greedy", "exact", "qaoa"])
+      $(`#map-algorithm option[value="${key}"]`).disabled = !available(key);
+    if (state.previewState === "ok" && !available(method))
+      method = ["greedy", "exact", "qaoa"].find(available) || "greedy";
+    $("#map-algorithm").value = method;
     const result = method === "qaoa" ? state.quantum : comparison?.[method];
-    const validLayer =
-      state.previewState === "ok" &&
-      (method !== "qaoa" || state.quantumState === "ok");
+    const validLayer = available(method);
     root.style.setProperty("--layer-color", colors[method]);
     map.update(
       data,
@@ -90,6 +121,7 @@ export function mount(root, transport) {
     $("#map-method").style.color = colors[method];
     $("#coordinates button").disabled = !data;
     $("#export").disabled = !data;
+    $("#copy").disabled = !data;
     for (const id of [
       "k",
       "radius",
@@ -133,12 +165,12 @@ export function mount(root, transport) {
       provenance.replaceChildren();
       for (const text of [
         data.meta.zone_resolution,
-        `Coordinate system: ${data.meta.crs}.`,
+        `Coordinate system: ${translateData(data.meta.crs)}.`,
         data.meta.weight_source,
         data.meta.site_selection,
         data.meta.license_note,
       ])
-        if (text) provenance.append(node("p", text));
+        if (text) provenance.append(node("p", translateData(text)));
       for (const source of data.meta.sources) {
         const p = node("p");
         p.append(
@@ -179,10 +211,7 @@ export function mount(root, transport) {
         : state.previewState === "loading"
           ? "running"
           : r?.status || "failed";
-      const current =
-        state.previewState === "ok" &&
-        status === "ok" &&
-        matches(r, comparison);
+      const current = available(key);
       const article = node("article", undefined, "method");
       article.style.setProperty("--method-color", colors[key]);
       article.dataset.method = key;
@@ -317,7 +346,12 @@ export function mount(root, transport) {
   $("#dataset").addEventListener("change", async (event) => {
     currentDataset = event.target.value;
     active = null;
-    await controller.load(currentDataset);
+    if (currentDataset === "imported") await controller.importCase(importedCase);
+    else await controller.load(currentDataset);
+  });
+  $("#map-algorithm").addEventListener("change", (event) => {
+    method = event.target.value;
+    render(controller.state);
   });
   $("#candidate").addEventListener("change", (event) => {
     active = event.target.value;
@@ -377,12 +411,44 @@ export function mount(root, transport) {
   $("#run").addEventListener("click", () =>
     controller.run(Number($("#shots").value)),
   );
-  $("#reset").addEventListener("click", () => controller.load(currentDataset));
+  $("#reset").addEventListener("click", () => {
+    if (currentDataset === "imported") controller.importCase(importedCase);
+    else controller.load(currentDataset);
+  });
+  function showCase() {
+    $("#snapshot").value = JSON.stringify(controller.state.data, null, 2);
+    $("#snapshot").focus();
+    $("#snapshot").select();
+  }
+  $("#copy").addEventListener("click", async () => {
+    if (!controller.state.data) return;
+    const data = controller.state.data;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      $("#copy-status").textContent = `Copied ${data.meta.id} revision ${data.meta.revision}.`;
+    } catch {
+      showCase();
+      $("#copy-status").textContent =
+        "Clipboard unavailable. Select and copy the JSON below.";
+    }
+  });
   $("#export").addEventListener("click", () => {
-    if (controller.state.data) {
-      $("#snapshot").value = JSON.stringify(controller.state.data, null, 2);
-      $("#snapshot").focus();
-      $("#snapshot").select();
+    if (controller.state.data) showCase();
+  });
+  $("#load-json").addEventListener("click", async () => {
+    try {
+      const saved = JSON.parse($("#snapshot").value);
+      if (!(await controller.importCase(saved))) return;
+      importedCase = clone(controller.state.data);
+      currentDataset = "imported";
+      $("#dataset option[value=imported]").disabled = false;
+      $("#dataset").value = currentDataset;
+      active = null;
+      render(controller.state);
+    } catch (error) {
+      controller.state.error = `Cannot load JSON: ${error.message}`;
+      controller.emit();
     }
   });
   $("#restore").addEventListener("click", async () => {

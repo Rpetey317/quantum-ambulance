@@ -13,6 +13,7 @@ export class Controller {
     this.onChange = onChange;
     this.generation = 0;
     this.loadRequest = 0;
+    this.importRequest = 0;
     this.sessionReserved = false;
     this.firstQuantumCompleted = new Promise((resolve) => {
       this.completeFirstQuantum = resolve;
@@ -74,6 +75,50 @@ export class Controller {
       this.state.previewState = "failed";
       this.state.error = error.message;
       this.emit();
+    }
+  }
+  async importCase(input) {
+    const ticket = ++this.importRequest;
+    const request = this.loadRequest;
+    const generation = this.generation;
+    try {
+      const data = clone(input);
+      const bounds = boundsFor(data);
+      validate(data, bounds);
+      const comparison = await this.transport.preview(data);
+      if (
+        ticket !== this.importRequest ||
+        request !== this.loadRequest ||
+        generation !== this.generation
+      )
+        return false;
+      if (
+        comparison.case_id !== data.meta.id ||
+        comparison.case_revision !== data.meta.revision ||
+        !comparison.input_fingerprint
+      )
+        throw new Error("Preview returned a different case identity.");
+      ++this.loadRequest;
+      ++this.generation;
+      this.state.data = data;
+      this.state.bounds = bounds;
+      this.state.comparison = comparison;
+      this.state.previewState = "ok";
+      this.state.quantumState =
+        this.state.quantum || this.state.busy ? "stale" : "not_run";
+      this.state.error = "";
+      this.emit();
+      return true;
+    } catch (error) {
+      if (
+        ticket !== this.importRequest ||
+        request !== this.loadRequest ||
+        generation !== this.generation
+      )
+        return false;
+      this.state.error = `Cannot load JSON: ${error.message}`;
+      this.emit();
+      return false;
     }
   }
   edit(change) {

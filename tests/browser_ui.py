@@ -40,8 +40,20 @@ def check(browser_path, artifacts):
             expect(greedy.locator(".percentage")).to_have_text("81.0%")
             expect(exact.locator(".percentage")).to_have_text("85.1%")
             expect(page.locator("#add")).to_be_disabled()
+            algorithm = page.locator("#map-algorithm")
+            expect(algorithm).to_have_value("greedy")
+            expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
             exact.get_by_role("button").click()
+            expect(algorithm).to_have_value("exact")
+            algorithm.select_option("greedy")
+            expect(greedy.get_by_role("button")).to_have_attribute("aria-pressed", "true")
+            algorithm.select_option("exact")
             assert page.locator(".marker.selected").count() == 3
+            page.locator(".source-details summary").click()
+            expect(page.locator("#provenance")).to_contain_text("One point per census tract")
+            expect(page.locator("#provenance")).to_contain_text("2010 National Census")
+            expect(page.locator("#provenance")).to_contain_text("Información Censal por Radio")
+            assert "un punto por" not in page.locator("#provenance").inner_text()
             page.screenshot(path=str(artifacts / "desktop.png"), full_page=True)
 
             # Drag -> revision bump -> real Python recomputation -> matching overlay.
@@ -56,9 +68,12 @@ def check(browser_path, artifacts):
             page.mouse.up()
             expect(page.locator("#case-summary")).to_contain_text("revision 2")
             expect(exact.locator(".status")).to_have_text("Current case")
-            page.locator(".source-details summary").click()
             page.locator("#export").click()
             snapshot = json.loads(page.locator("#snapshot").input_value())
+            page.context.grant_permissions(["clipboard-read", "clipboard-write"])
+            page.locator("#copy").click()
+            expect(page.locator("#copy-status")).to_contain_text("Copied")
+            assert json.loads(page.evaluate("navigator.clipboard.readText()")) == snapshot
             expected = json.loads(preview(json.dumps(snapshot)))["exact"]
             selected = [
                 int(text)
@@ -129,13 +144,17 @@ def check(browser_path, artifacts):
             )
             expect(quantum).to_contain_text("Backend / job wall time")
             expect(quantum).to_contain_text("8 / 8")
+            expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", False)
             quantum.get_by_role("button").click()
+            expect(algorithm).to_have_value("qaoa")
             assert page.locator(".marker.selected").count() == 3
             page.locator("#k").fill("2")
             page.locator("#k").dispatch_event("change")
             expect(quantum.locator(".status")).to_have_text("Stale after a case edit")
             expect(quantum.locator(".percentage")).to_have_text("—")
-            assert page.locator(".marker.selected").count() == 0
+            expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
+            expect(algorithm).to_have_value("greedy")
+            assert page.locator(".marker.selected").count() == 2
 
             # Restoring a saved candidate snapshot reloads trusted demand zones.
             page.locator("#snapshot").fill(json.dumps(snapshot))
@@ -143,6 +162,42 @@ def check(browser_path, artifacts):
             expect(page.locator("#dataset")).to_have_value("caba-comuna4")
             expect(page.locator("#x")).to_have_value(str(snapshot["sites"][0]["x_km"]))
             expect(exact.locator(".status")).to_have_text("Current case")
+            custom = json.loads(json.dumps(snapshot))
+            custom["meta"]["id"] = "imported-case"
+            custom["meta"]["revision"] = "draft-3"
+            custom["meta"]["zone_resolution"] = "Custom demand centroids"
+            custom["zones"][0]["weight"] += 1000
+            page.locator("#snapshot").fill(json.dumps(custom))
+            page.locator("#load-json").click()
+            expect(page.locator("#dataset")).to_have_value("imported")
+            expect(page.locator("#revision-note")).to_contain_text("imported-case · revision draft-3")
+            expect(page.locator("#provenance")).to_contain_text("Custom demand centroids")
+            expect(greedy.locator(".status")).to_have_text("Current case")
+            expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
+            page.locator("#export").click()
+            assert json.loads(page.locator("#snapshot").input_value())["zones"][0]["weight"] == custom["zones"][0]["weight"]
+            page.locator("#snapshot").fill("{not json")
+            page.locator("#load-json").click()
+            expect(page.locator("#error")).to_contain_text("Cannot load JSON")
+            expect(page.locator("#dataset")).to_have_value("imported")
+            page.locator("#k").fill("2")
+            page.locator("#k").dispatch_event("change")
+            expect(page.locator("#case-summary")).to_contain_text("revision draft-3:edit")
+            page.locator("#reset").click()
+            expect(page.locator("#k")).to_have_value(str(custom["k_default"]))
+            expect(page.locator("#case-summary")).to_contain_text("revision draft-3")
+            page.locator("#dataset").select_option("synthetic")
+            expect(greedy.locator(".status")).to_have_text("Current case")
+            page.locator("#dataset").select_option("imported")
+            expect(page.locator("#revision-note")).to_contain_text("imported-case")
+            page.locator("#snapshot").fill(json.dumps(custom))
+            page.locator("#restore").click()
+            expect(page.locator("#error")).to_contain_text("Cannot restore")
+            page.locator("#snapshot").fill(json.dumps(snapshot))
+            page.locator("#restore").click()
+            expect(page.locator("#dataset")).to_have_value("caba-comuna4")
+            page.locator("#export").click()
+            assert json.loads(page.locator("#snapshot").input_value())["zones"][0]["weight"] == snapshot["zones"][0]["weight"]
 
             # Test-only injected transport results exercise honest unavailable/invalid/error UI.
             from ambulance.core import evaluate_case, prepare_case
@@ -157,6 +212,7 @@ def check(browser_path, artifacts):
             page.locator("#k").dispatch_event("change")
             expect(exact.locator(".status")).to_have_text("Exact search unavailable")
             expect(exact).to_contain_text("cost bound")
+            expect(algorithm.locator('option[value="exact"]')).to_have_js_property("disabled", True)
 
             def invalid_samples(route):
                 data = route.request.post_data_json["data"]
@@ -169,6 +225,7 @@ def check(browser_path, artifacts):
             page.route("**/api/quantum", invalid_samples)
             page.locator("#run").click()
             expect(quantum.locator(".status")).to_have_text("No valid exactly-K sample")
+            expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
             expect(quantum.locator(".percentage")).to_have_text("—")
             expect(quantum).to_contain_text("Not evaluated")
             expect(quantum.get_by_role("button")).to_be_disabled()
