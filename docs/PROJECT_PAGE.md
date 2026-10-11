@@ -123,8 +123,27 @@ The following are example runs done on the pre-loaded 'CABA - Comuna 4' dataset 
 5. **One quantum job per Run on IonQ.** To sample again, copy the case JSON,
    press Stop, start a new Run and restore it.
 
-Locally: `pip install -r requirements.txt`, then `python baseline.py` (original
-prototype, ~20 s) or `python -m unittest discover -s tests -v` (test suite).
+## How to run it locally
+
+Everything below is local-only; no remote jobs are submitted.
+
+```bash
+python -m pip install -r requirements.txt   # qiskit==2.5.2, numpy, scipy
+```
+
+- **Original prototype** (~1–2 min): `python baseline.py` prints greedy, exact
+  and sampled QAOA results on the synthetic 8-site case, all on the local
+  statevector. Edit `ZONAS`, `SITIOS`, `RADIO_KM` or `K` at the top of the file
+  to experiment, then rerun.
+- **Interactive UI**: `python -m tools.preview_ui`, then open
+  `http://127.0.0.1:8765` (Ctrl+C to stop). A localhost-only QA harness serving
+  the real Python bridge: the map editor, all datasets, greedy/exact previews
+  and a quantum button backed by local `BasicSimulator`. Do not use it inside
+  Qollab.
+- **Test suites**: `python -m unittest discover -s tests -v` (Python core and
+  adapter) and `npm test` (UI controller/model tests; Node only, no build
+  step). For browser-level UI checks with Playwright and installed
+  Chrome/Chromium, see `docs/UI.md`.
 
 ## Limitations and next steps
 
