@@ -1,0 +1,5 @@
+# Fuentes crudas descargadas por tools/build_cases.py (regenerables, ~7 MB)
+data/raw/
+
+__pycache__/
+*.pyc
