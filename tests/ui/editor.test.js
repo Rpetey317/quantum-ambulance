@@ -531,3 +531,23 @@ test("backend policy is conservative for unknown backends and bounded for IonQ",
   );
   assert.equal(backendPolicy({ name: "Unknown provider" }).singleJob, true);
 });
+
+test("public simulator caps shots and sites without weakening IonQ guards", async () => {
+  const info = { name: "Web simulator", module: "qiskit.providers.basic_provider",
+    is_simulator: true, shot_cap: 128, site_cap: 8 };
+  assert.equal(backendPolicy(info).shotCap, 128);
+  assert.equal(backendPolicy(info).siteCap, 8);
+  assert.equal(backendPolicy({ name: "IonQ", shot_cap: 4096 }).shotCap, 128);
+  assert.equal(backendPolicy({ site_cap: 100 }).siteCap, SITE_CAP);
+  let calls = 0;
+  const c = new Controller(transport({ backendInfo: async () => info,
+    runQuantum: async data => { calls++; return { qaoa: result(data) }; } }));
+  await c.init();
+  assert.equal(await c.run(129), false);
+  assert.equal(calls, 0);
+  await c.edit(data => data.sites.push({ id: "ninth", x_km: 7, y_km: 7 }));
+  assert.equal(c.state.previewState, "ok");
+  assert.equal(c.canRun(), false);
+  assert.equal(await c.run(64), false);
+  assert.equal(calls, 0);
+});

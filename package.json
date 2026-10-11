@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "node tools/build_web.js",
     "test": "node --test tests/ui/*.test.js"
   }
 }

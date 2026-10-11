@@ -4,3 +4,8 @@ data/raw/
 __pycache__/
 *.pyc
 .gstack/
+.vercel/
+dist/
+.env*.local
+.vercel
+.env*

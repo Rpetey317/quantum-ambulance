@@ -4,6 +4,11 @@ A Qollab x IonQ **Quantum Impact** hackathon project exploring where to place a 
 
 ## Run it locally
 
+Try the [public web app](https://quantum-ambulance.vercel.app), with the same map
+editor and classical solvers plus bounded QAOA on a server-side Qiskit simulator.
+See [standalone web setup and limits](docs/VERCEL.md). The Qollab entrypoint remains
+available for its visitor-selected backends.
+
 Everything below is local-only; it submits no remote or paid jobs.
 
 ```bash
