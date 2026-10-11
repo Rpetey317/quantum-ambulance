@@ -36,16 +36,18 @@ To experiment, edit `ZONAS`, `SITIOS`, `RADIO_KM`, `K`, or the circuit settings 
 
 ## App direction and limitations
 
-The pitch proposes a project page showing the problem, a map of zones and selected bases, a comparison of methods, plots of measured results, instructions, limitations, and credits. Potential follow-ups include changing the radius or ambulance count, testing multiple instances, using real city data and road travel times, modeling demand over time, and validating compatibility with IonQ simulation or hardware. **These are proposals, not implemented app features.** The UI, backend, deployment, and data sources have not been selected yet.
+The pitch proposes a project page showing the problem, a map of zones and selected bases, a comparison of methods, plots of measured results, instructions, limitations, and credits. Potential follow-ups include changing the radius or ambulance count, testing multiple instances, using real city data and road travel times, modeling demand over time, and validating compatibility with IonQ simulation or hardware. **These are proposals, not implemented app features.** GCBA seed cases have been prepared in `data/`, but they are not connected to an app; the UI, backend architecture, and deployment have not been selected yet.
 
-The QAOA cost is only a pairwise approximation of true union coverage. The current data are synthetic and static, and exact statevector-based angle optimization does not scale to large numbers of sites. Do not describe this prototype as an operational emergency dispatch tool or claim a demonstrated speed advantage over classical methods.
+The QAOA cost is only a pairwise approximation of true union coverage. The baseline's data are synthetic and static, and exact statevector-based angle optimization does not scale to large numbers of sites. Do not describe this prototype as an operational emergency dispatch tool or claim a demonstrated speed advantage over classical methods.
 
 ## Repository files
 
 - `baseline.py` — executable Qiskit proof of concept (Python; code/comments in Spanish).
 - `Idea.pdf` — Spanish pitch, methodology, reported results, hackathon checklist, and proposed presentation.
-- `QOLLAB.md` — Qollab platform notes, job limits, platform-spike upload checklist, and the plan for porting `baseline.py`.
-- `qollab-spike/` — an isolated JS/Python/one-qubit platform probe for issue #1; not the ambulance app. See `QOLLAB.md` for upload and live validation steps.
+- `QOLLAB.md` — Qollab backend notes, job limits, platform-spike validation findings, and the plan for porting `baseline.py`.
+- `qollab-spike/` — local-only JS/Python/one-qubit probe for issue #1 (not committed); not the ambulance app. See `QOLLAB.md` for validation steps.
+- `data/` — GCBA open-data seed cases: processed `cases/*.json` plus `README.md` with provenance, schema, and regeneration steps. Raw downloads are not committed.
+- `tools/` — `build_cases.py` regenerates the case assets from public datasets (stdlib only); `validate_cases.py` checks the case contract and coverage sanity.
 - `LICENSE` — MIT license.
 
 The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. The only app-like code is the isolated platform spike; the full ambulance app and its test suite are not implemented yet.
