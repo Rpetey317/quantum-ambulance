@@ -44,6 +44,7 @@ The QAOA cost is only a pairwise approximation of true union coverage. The curre
 
 - `baseline.py` — executable Qiskit proof of concept (Python; code/comments in Spanish).
 - `Idea.pdf` — Spanish pitch, methodology, reported results, hackathon checklist, and proposed presentation.
+- `QOLLAB.md` — Qollab platform notes: backend model, job limits, and the plan for porting `baseline.py` into a published Qollab project.
 - `LICENSE` — MIT license.
 
 The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. No app or automated test suite is present yet.
