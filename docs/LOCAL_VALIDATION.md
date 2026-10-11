@@ -92,12 +92,14 @@ and execution against the proposed assets, not all their external claims.
 
 ## Offline IonQ compatibility check
 
-Using `qiskit-ionq==1.0.2`, constructed an `IonQSimulatorBackend` locally with a
-dummy offline token, transpiled the eight-site, three-layer measured circuit at
+Using `qiskit-ionq==1.1.1`, constructed an `IonQSimulatorBackend` locally with a
+dummy offline token, transpiled the three-layer measured circuit at
 optimization level 1, and converted it with
 `qiskit_ionq.helpers.qiskit_circ_to_ionq_circ(..., gateset="qis")`.
-No provider run or network job was requested. Conversion succeeded: 803
-serializable gates, compiled local depth 729, no `initialize` or `reset`.
+No provider run or network job was requested. The deterministic Dicke
+preparation keeps the serialized gate list near-linear in N (292 gates/16 KB
+at 8 sites, 811 gates/47 KB at 16 sites, compiled local depth 458), where the
+earlier generic synthesis produced 803 gates at 8 sites and ~211,000 at 16.
 IonQ may change this gate count in its own compiler and may still reject or
 limit a remote job; this offline check cannot establish remote feasibility.
 

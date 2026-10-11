@@ -88,9 +88,11 @@ Notes:
 - IonQ remote sims are shot-aware: noise-model simulation runs once per shot, so
   large shot counts take proportionally longer. Test small `shots` first.
 - IonQ recompiles the circuit to native gates before execution; gate count can
-  grow. The prototype's `qc.initialize()` and the adapter's unitary
-  `StatePreparation` both synthesize the Dicke state into many gates. Local and
-  offline serialization checks passed; **test on the IonQ Forte sim early**.
+  grow. The adapter prepares the Dicke state deterministically in O(N·K) gates
+  (generic `StatePreparation` and the prototype's `qc.initialize()` synthesized
+  ~2**N gates; those serialized jobs were rejected in remote transport). Local
+  and offline serialization checks passed; **test on the IonQ Forte sim
+  early**.
 
 ## What "run on various simulators" means for this project
 

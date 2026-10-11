@@ -114,16 +114,18 @@ qaoa = run_qaoa(case, backend, shots=64, exact_result=comparison["exact"])
 
 `backend` must come from Qollab's selected device. Defaults: three layers, two
 local COBYLA restarts, 150 evaluations per restart, seed 1, 64 shots. Limits:
-eight sites, one to five layers, one to four restarts, at most 500 evaluations
+sixteen sites, one to five layers, one to four restarts, at most 500 evaluations
 per restart, and at most 4096 shots. `maxiter` must be at least `2*layers+2`.
-Known IonQ simulators have a **128-shot application guard**; request 64 for smoke
-checks. This is a conservative demo policy, not a claimed provider limit.
+Known IonQ simulators have a **128-shot application guard** and a **10-site
+application bound**; request 64 shots for smoke checks. These are conservative
+demo policies, not claimed provider limits.
 Identified IonQ hardware is disabled in this adapter; no paid jobs are authorized.
 
 All coverage and quantum components are rebuilt from the supplied case.
-The initial state is the uniform Dicke K-weight state; unitary `StatePreparation`
-avoids `initialize` resets. The XY mixer supports N=1, N=2, and odd N, as well as
-the original eight-site ring. Parameters are explicitly mapped as gamma then
+The initial state is the uniform Dicke K-weight state, built deterministically
+in O(N·K) gates (Bärtschi–Eidenbenz SCS blocks, arXiv:1904.07358) instead of
+generic state synthesis; there are no `initialize` resets. The XY mixer
+supports N=1, N=2, and odd N, as well as the original eight-site ring. Parameters are explicitly mapped as gamma then
 beta, independent of Qiskit's alphabetic parameter ordering.
 
 Local energy evaluations evolve the already prepared Dicke state through the

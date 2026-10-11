@@ -87,7 +87,7 @@ No hardware execution.
 - IDs remain stable; marker labels and result indices are zero-based current
   array positions. Drag, numeric coordinates and arrow keys (100 m, Shift 10 m)
   edit candidate bases. Institution names remain labelled seed provenance.
-- One to eight sites, positive finite radius, `1 <= K <= N`, finite coordinates
+- One to sixteen sites, positive finite radius, `1 <= K <= N`, finite coordinates
   inside the extent, and at least one metre between candidates are enforced.
   Removal clamps K. New candidate IDs avoid collisions.
 - Every accepted edit increments revision and recomputes both classical methods

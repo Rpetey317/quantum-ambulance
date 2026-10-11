@@ -19,6 +19,7 @@ from ambulance.core import (
     solve_exact,
 )
 from ambulance.quantum import (
+    IONQ_SITE_CAP,
     build_qaoa,
     decode_bitstring,
     optimize_angles,
@@ -88,6 +89,9 @@ class QuantumTests(unittest.TestCase):
                     float(state.probabilities()[model.weights != k].sum()), 1e-20
                 )
                 self.assertNotIn("reset", model.circuit.decompose(reps=4).count_ops())
+                self.assertNotIn(
+                    "state_preparation", model.circuit.count_ops()
+                )
 
     def test_edits_rebuild_coverage_cost_and_circuit_dimensions(self):
         before = build_qaoa(self.case, layers=1)
@@ -336,6 +340,14 @@ class QuantumTests(unittest.TestCase):
         result = run_qaoa(self.case, backend, shots=8)
         self.assertEqual(result["backend_run_calls"], 0)
         self.assertIn("paid hardware", result["message"])
+        oversized = deepcopy(self.case)
+        for i in range(IONQ_SITE_CAP - len(oversized["sites"]) + 1):
+            oversized["sites"].append(
+                {"id": f"extra-{i}", "x_km": 30 + i, "y_km": 30}
+            )
+        result = run_qaoa(oversized, IonQStub(), shots=8)
+        self.assertEqual(result["error_stage"], "validation")
+        self.assertIn(f"{IONQ_SITE_CAP} candidate sites", result["message"])
 
     def test_quantum_bridge_keeps_every_comparison_on_the_same_revision(self):
         self.case["k"] = 1

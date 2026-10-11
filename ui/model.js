@@ -1,4 +1,4 @@
-export const SITE_CAP = 8;
+export const SITE_CAP = 16;
 export const clone = (value) => JSON.parse(JSON.stringify(value));
 
 export function boundsFor(data) {

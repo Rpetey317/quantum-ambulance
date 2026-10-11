@@ -39,7 +39,7 @@ def check(browser_path, artifacts):
             quantum = page.locator('[data-method="qaoa"]')
             expect(greedy.locator(".percentage")).to_have_text("81.0%")
             expect(exact.locator(".percentage")).to_have_text("85.1%")
-            expect(page.locator("#add")).to_be_disabled()
+            expect(page.locator("#add")).to_be_enabled()
             algorithm = page.locator("#map-algorithm")
             expect(algorithm).to_have_value("greedy")
             expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
@@ -130,8 +130,11 @@ def check(browser_path, artifacts):
             expect(page.locator("#k")).to_have_value("7")
             expect(page.locator("#add")).to_be_enabled()
             page.locator("#add").click()
+            expect(page.locator("#site-limit")).to_contain_text("8 / 16")
+            for _ in range(8):
+                page.locator("#add").click()
             expect(page.locator("#add")).to_be_disabled()
-            assert page.locator(".marker").count() == 8
+            assert page.locator(".marker").count() == 16
 
             # Full-resolution large case, then mobile layout and a numeric edit.
             page.locator("#dataset").select_option("caba")

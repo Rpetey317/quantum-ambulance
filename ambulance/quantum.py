@@ -10,7 +10,7 @@ from time import perf_counter
 import numpy as np
 from qiskit import QuantumCircuit, transpile
 from qiskit.circuit import ParameterVector
-from qiskit.circuit.library import StatePreparation
+from qiskit.circuit.library import RYGate
 from qiskit.quantum_info import Statevector
 from scipy.optimize import minimize
 
@@ -21,6 +21,7 @@ MAX_RESTARTS = 4
 MAX_ITERATIONS = 500
 MAX_SHOTS = 4096
 IONQ_SIMULATOR_SHOT_CAP = 128  # conservative application policy, not a provider limit
+IONQ_SITE_CAP = 16  # conservative application policy, not a provider limit
 COST_SCALE = 5.0
 
 
@@ -56,6 +57,39 @@ class QAOAModel:
             for parameter, angle in zip(parameters, angles)
             if parameter in active
         }
+
+
+def _dicke_circuit(n, k):
+    """Uniform weight-K state via SCS blocks (arXiv:1904.07358), O(N*K) gates.
+
+    Generic state synthesis grows as 2**N; serialized remote jobs large
+    enough to be truncated in transport motivated the deterministic form.
+    """
+
+    def scs(m, k):
+        block = QuantumCircuit(k + 1)
+        block.cx(k - 1, k)
+        block.cry(2 * math.acos(math.sqrt(1 / m)), k, k - 1)
+        block.cx(k - 1, k)
+        for l in range(2, k + 1):
+            block.cx(k - l, k)
+            block.append(
+                RYGate(2 * math.acos(math.sqrt(l / m))).control(2),
+                [k, k - l + 1, k - l],
+            )
+            block.cx(k - l, k)
+        return block
+
+    circuit = QuantumCircuit(n)
+    for i in range(n - k, n):
+        circuit.x(i)
+    if k == n:
+        return circuit
+    for l in range(n, k, -1):
+        circuit.compose(scs(l, k), range(l - k - 1, l), inplace=True)
+    for l in range(k, 1, -1):
+        circuit.compose(scs(l, l - 1), range(l), inplace=True)
+    return circuit
 
 
 def build_qaoa(case, layers=3):
@@ -102,9 +136,9 @@ def build_qaoa(case, layers=3):
                     evolution.rxx(beta[layer], i, j)
                     evolution.ryy(beta[layer], i, j)
     circuit = QuantumCircuit(n)
-    # The initial register is |0...0>; a unitary preparation avoids initialize's
-    # resets while preparing exactly the same uniform K-weight state.
-    circuit.append(StatePreparation(dicke), range(n))
+    # The initial register is |0...0>; the deterministic blocks prepare exactly
+    # the same uniform K-weight state as model.dicke, without resets.
+    circuit.compose(_dicke_circuit(n, coverage.k), inplace=True)
     circuit.compose(evolution, inplace=True)
     return QAOAModel(
         coverage, q, costs, weights, dicke, circuit, evolution, gamma, beta
@@ -365,6 +399,10 @@ def run_qaoa(
             if identity["is_simulator"] is not True:
                 raise ValueError(
                     "Only identified IonQ simulators are enabled; paid hardware is outside this adapter's scope"
+                )
+            if coverage.n > IONQ_SITE_CAP:
+                raise ValueError(
+                    f"IonQ runs are bounded to {IONQ_SITE_CAP} candidate sites by application policy"
                 )
             if shots > IONQ_SIMULATOR_SHOT_CAP:
                 raise ValueError(

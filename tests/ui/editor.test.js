@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
+  SITE_CAP,
   boundsFor,
   edited,
   validate,
@@ -105,12 +106,26 @@ test("reject duplicates, nonfinite coordinates, out-of-bounds edits and invalid 
     assert.throws(() => edited(source, boundsFor(source), change));
 });
 test("site cap, stable IDs and safe K after removal", () => {
+  const bounds = boundsFor(source);
+  const grown = edited(source, bounds, (d) => {
+    for (let i = 0; d.sites.length < SITE_CAP; i++)
+      d.sites.push({
+        id: `new-${i}`,
+        x_km: bounds.minX + 0.01 + i * 0.002,
+        y_km: bounds.minY + 0.05,
+      });
+  });
+  assert.equal(grown.sites.length, SITE_CAP);
   assert.throws(
     () =>
-      edited(source, boundsFor(source), (d) =>
-        d.sites.push({ id: "new", x_km: 1, y_km: 1 }),
+      edited(grown, bounds, (d) =>
+        d.sites.push({
+          id: "over",
+          x_km: bounds.minX + 0.03,
+          y_km: bounds.minY + 0.06,
+        }),
       ),
-    /8/,
+    new RegExp(`${SITE_CAP}`),
   );
   const data = clone(source);
   data.k = data.sites.length;

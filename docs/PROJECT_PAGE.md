@@ -114,7 +114,7 @@ The following are example runs done on the pre-loaded 'CABA - Comuna 4' dataset 
 2. Choose a case (synthetic, CABA Comuna 4 or full CABA). Greedy and exact
    results update immediately.
 3. Optionally drag candidate sites, edit coordinates, add or remove sites (max
-   8), or change K and the radius. Classical results refresh, and any previous
+   16), or change K and the radius. Classical results refresh, and any previous
    quantum result is marked **stale**.
 4. Set shots (up to 4,096; up to 128 on IonQ simulators) and run QAOA. The panel
    shows the selected sites, actual coverage, valid exactly-K shots, P(optimum)
