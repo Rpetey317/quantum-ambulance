@@ -36,6 +36,9 @@ en pasos separados para distinguir el tipo de falla:
 - Población total 2315, greedy `[2, 5, 6]` → 1845 y óptimo exacto 2086, con
   los dos óptimos empatados `[1, 2, 5]` y `[2, 4, 5]`.
 - Selección vacía, superposición contada una sola vez y exacto ≥ greedy.
+- Cambiar K (1 a 8): se eligen exactamente K sitios, más ambulancias nunca
+  cubren menos, con K=1 greedy y exacto coinciden, y con K=8 se alcanza la
+  cobertura máxima.
 - El costo QAOA por pares es una cota inferior de la cobertura real y no es
   exacto en este ejemplo, por eso la selección final usa cobertura real.
 - Orden de bits de Qiskit: `bits_a_sitios` invertido y consistente con el
@@ -54,6 +57,12 @@ en pasos separados para distinguir el tipo de falla:
 | `caba-comuna4` | 252 | 8 | 3 | 1.8 km | 218,245 | 176,818 (81.0%) | 185,708 (85.1%) |
 | `caba` | 3,552 | 8 | 3 | 3.0 km | 2,890,151 | 1,682,455 (58.2%) | 1,682,455 (58.2%) |
 
+- El validador **rechaza** datos rotos: población 0 o negativa, ID de zona
+  repetido, sin sitios, K fuera de rango, radio ≤ 0, sitio fuera de la ciudad
+  y falta de procedencia.
+- Cambiar radio y K sobre Comuna 4: un radio mayor nunca cubre menos (cada
+  sitio cubre un superconjunto de zonas), más ambulancias nunca cubren menos,
+  K=1 greedy = exacto y K=8 alcanza el máximo.
 - CRS EPSG:9498 declarado, coordenadas en km plausibles (no lon/lat), la
   Comuna 4 cae dentro de la ciudad, y fuentes con licencia y URL.
 
@@ -67,7 +76,7 @@ Si una regeneración de datos cambia estos valores a propósito, actualizar
 | `caba-comuna4.json` | 31,981 bytes |
 | `caba.json` | 400,968 bytes |
 | Límite de tamaño de asset (`validate_cases.py`) | 1024 KB por archivo |
-| Suite completa (22 tests) | ~0.2 s |
+| Suite completa (37 tests) | ~0.3 s |
 | `python baseline.py` | ~22 s |
 
 El límite de 1024 KB es provisional: todavía no se midió el límite real de

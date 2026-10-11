@@ -7,6 +7,7 @@ Qiskit). Ningun test depende de una corrida estocastica ni de un backend remoto.
 
 import itertools
 import unittest
+from unittest import mock
 
 import numpy as np
 from qiskit.quantum_info import Statevector
@@ -56,6 +57,41 @@ class OriginalExampleTests(unittest.TestCase):
         self.assertGreaterEqual(
             b.poblacion_cubierta(b.exacta()), b.poblacion_cubierta(b.greedy())
         )
+
+
+class ChangingKTests(unittest.TestCase):
+    """Reglas de sentido comun al cambiar la cantidad de ambulancias K."""
+
+    def solve(self, k):
+        with mock.patch.object(b, "K", k):
+            return b.greedy(), b.exacta()
+
+    def test_selection_size_matches_k(self):
+        for k in range(1, b.N + 1):
+            with self.subTest(K=k):
+                g, e = self.solve(k)
+                self.assertEqual(len(g), k)
+                self.assertEqual(len(set(e)), k)
+
+    def test_more_ambulances_never_cover_less(self):
+        anterior = 0
+        for k in range(1, b.N + 1):
+            with self.subTest(K=k):
+                g, e = self.solve(k)
+                v = b.poblacion_cubierta(list(e))
+                self.assertGreaterEqual(v, anterior)
+                self.assertGreaterEqual(v, b.poblacion_cubierta(g))
+                anterior = v
+
+    def test_single_ambulance_greedy_equals_exact(self):
+        g, e = self.solve(1)
+        self.assertEqual(b.poblacion_cubierta(g), b.poblacion_cubierta(e))
+
+    def test_all_sites_reach_maximum_coverage(self):
+        _, e = self.solve(b.N)
+        self.assertEqual(sorted(e), list(range(b.N)))
+        self.assertEqual(b.poblacion_cubierta(list(e)),
+                         b.poblacion_cubierta(list(range(b.N))))
 
 
 class QuadraticApproximationTests(unittest.TestCase):

@@ -130,7 +130,8 @@ def validate(path):
         return union_weight(zones, ids)
 
     sel = []
-    for _ in range(k):  # greedy
+    k_ok = isinstance(k, int) and 1 <= k <= len(sites)
+    for _ in range(k if k_ok else 0):  # greedy (k invalido ya se reporto arriba)
         mejor = max((i for i in range(len(sites)) if i not in sel),
                     key=lambda i: cubierto(sel + [i]))
         sel.append(mejor)

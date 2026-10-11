@@ -11,6 +11,7 @@ import io
 import itertools
 import json
 import math
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -112,6 +113,95 @@ class CaseRegressionTests(unittest.TestCase):
         # El caso compacto existe para mostrar una brecha entre metodos.
         exp = EXPECTED["caba-comuna4"]
         self.assertGreater(exp["exact"], exp["greedy"])
+
+
+def exact(case, cubre, k):
+    return max(covered(case, cubre, list(s))
+               for s in itertools.combinations(range(len(cubre)), k))
+
+
+class ValidatorRejectsBadDataTests(unittest.TestCase):
+    """El validador tiene que fallar con datos rotos, no solo pasar los buenos."""
+
+    def assert_rejected(self, mutate):
+        case = load("caba-comuna4")
+        mutate(case)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "broken.json"
+            path.write_text(json.dumps(case), encoding="utf-8")
+            with contextlib.redirect_stdout(io.StringIO()):
+                errors = validate_cases.validate(str(path))
+        self.assertTrue(errors, "el validador acepto un caso invalido")
+
+    def test_zero_or_negative_population(self):
+        for weight in (0, -5):
+            with self.subTest(weight=weight):
+                self.assert_rejected(lambda c: c["zones"][0].update(weight=weight))
+
+    def test_duplicate_zone_id(self):
+        self.assert_rejected(
+            lambda c: c["zones"][1].update(id=c["zones"][0]["id"]))
+
+    def test_no_sites(self):
+        self.assert_rejected(lambda c: c.update(sites=[]))
+
+    def test_k_out_of_range(self):
+        for k in (0, 9):
+            with self.subTest(k=k):
+                self.assert_rejected(lambda c: c.update(k_default=k))
+
+    def test_non_positive_radius(self):
+        for r in (0, -1.0):
+            with self.subTest(radius=r):
+                self.assert_rejected(lambda c: c.update(radius_km=r))
+
+    def test_site_far_outside_city(self):
+        self.assert_rejected(
+            lambda c: c["sites"][0].update(x_km=c["sites"][0]["x_km"] + 100))
+
+    def test_missing_provenance(self):
+        self.assert_rejected(lambda c: c["meta"].pop("sources"))
+
+
+class ChangingRadiusAndKTests(unittest.TestCase):
+    """Reglas de sentido comun al editar K o el radio sobre datos reales."""
+
+    def setUp(self):
+        self.case = load("caba-comuna4")
+
+    def test_larger_radius_never_covers_less(self):
+        anterior_sets, anterior_opt = None, 0
+        for r in (0.5, 1.0, 1.8, 3.0, 5.0):
+            with self.subTest(radius_km=r):
+                case = dict(self.case, radius_km=r)
+                cubre = coverage_sets(case)
+                if anterior_sets is not None:
+                    for antes, ahora in zip(anterior_sets, cubre):
+                        self.assertLessEqual(antes, ahora)  # subconjunto
+                opt = exact(case, cubre, 3)
+                self.assertGreaterEqual(opt, anterior_opt)
+                anterior_sets, anterior_opt = cubre, opt
+
+    def test_more_ambulances_never_cover_less(self):
+        cubre = coverage_sets(self.case)
+        anterior = 0
+        for k in range(1, len(cubre) + 1):
+            with self.subTest(K=k):
+                opt = exact(self.case, cubre, k)
+                self.assertGreaterEqual(opt, anterior)
+                self.assertGreaterEqual(opt, covered(self.case, cubre, greedy(self.case, cubre, k)))
+                anterior = opt
+
+    def test_single_ambulance_greedy_equals_exact(self):
+        cubre = coverage_sets(self.case)
+        self.assertEqual(covered(self.case, cubre, greedy(self.case, cubre, 1)),
+                         exact(self.case, cubre, 1))
+
+    def test_all_sites_reach_maximum_coverage(self):
+        cubre = coverage_sets(self.case)
+        todos = list(range(len(cubre)))
+        self.assertEqual(exact(self.case, cubre, len(cubre)),
+                         covered(self.case, cubre, todos))
 
 
 class CaseUnitsTests(unittest.TestCase):
