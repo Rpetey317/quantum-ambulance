@@ -71,6 +71,7 @@ The QAOA cost is only a pairwise approximation of true union coverage. The origi
 - `tests/` — deterministic core and quantum adapter regressions, using local jobs only.
 - `docs/` — integration contract and observed validation.
 - `examples/qollab_smoke.py` — intermediate Python-only Qollab smoke entrypoint.
+- `docs/PROJECT_PAGE.md` — hackathon project page draft (problem, method, results, how to run, limitations, credits); `docs/results/` holds local reference results and charts from `tools/reference_runs.py`.
 - `Idea.pdf` — Spanish pitch, methodology, reported results, hackathon checklist, and proposed presentation.
 - `QOLLAB.md` — Qollab platform notes: backend model, job limits, and the plan for porting `baseline.py` into a published Qollab project.
 - `data/` — real seed-data cases for the demo (GCBA open data): `cases/*.json` processed assets plus `README.md` with provenance, schema, and regeneration steps. Raw downloads are not committed.

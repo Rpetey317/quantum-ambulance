@@ -1,0 +1,1458 @@
+{
+ "meta": {
+  "shots": 1024,
+  "seed_simulator": 11,
+  "budgets": {
+   "app": {
+    "layers": 3,
+    "restarts": 2,
+    "maxiter": 150
+   },
+   "baseline": {
+    "layers": 3,
+    "restarts": 4,
+    "maxiter": 500
+   }
+  },
+  "backend": "qiskit BasicSimulator (local)",
+  "python": "3.12.13",
+  "qiskit": "2.5.2"
+ },
+ "results": {
+  "synthetic": {
+   "app": {
+    "schema_version": 1,
+    "case_id": "synthetic-baseline",
+    "case_revision": 1,
+    "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      2,
+      5,
+      6
+     ],
+     "selected_site_ids": [
+      "2",
+      "5",
+      "6"
+     ],
+     "covered_weight": 1845.0,
+     "coverage_pct": 79.6976241900648,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.0005039549978391733,
+      "solve_s": 8.589199933339842e-05,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      1,
+      2,
+      5
+     ],
+     "selected_site_ids": [
+      "1",
+      "2",
+      "5"
+     ],
+     "covered_weight": 2086.0,
+     "coverage_pct": 90.10799136069114,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.0005039549978391733,
+      "solve_s": 0.0007378360023722053,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 840,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       1,
+       2,
+       5
+      ],
+      [
+       2,
+       4,
+       5
+      ]
+     ],
+     "n_optimal_solutions": 2
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      1,
+      2,
+      5
+     ],
+     "selected_site_ids": [
+      "1",
+      "2",
+      "5"
+     ],
+     "covered_weight": 2086.0,
+     "coverage_pct": 90.10799136069114,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.00043475300117279403,
+      "solve_s": null,
+      "quantum_prepare_s": 0.010273985000821995,
+      "local_optimization_s": 5.328682251001737,
+      "transpile_s": 0.6747977800005174,
+      "backend_job_s": 0.10392836800019722
+     },
+     "counts": {
+      "00100110": 126,
+      "01010100": 25,
+      "01100001": 88,
+      "00010110": 10,
+      "11000100": 25,
+      "00100101": 34,
+      "11100000": 53,
+      "01100010": 48,
+      "01000110": 150,
+      "01100100": 165,
+      "01000101": 65,
+      "01001100": 1,
+      "00110100": 38,
+      "10001010": 6,
+      "11000001": 18,
+      "00110010": 3,
+      "00011001": 3,
+      "00001110": 15,
+      "00100011": 20,
+      "00011010": 1,
+      "10000011": 2,
+      "00010101": 4,
+      "01110000": 7,
+      "01010010": 1,
+      "10000101": 10,
+      "00111000": 10,
+      "00011100": 2,
+      "01000011": 16,
+      "10100010": 7,
+      "10100001": 1,
+      "10000110": 3,
+      "10010010": 4,
+      "10101000": 2,
+      "01010001": 5,
+      "11010000": 1,
+      "11001000": 3,
+      "01001010": 12,
+      "01011000": 7,
+      "10001001": 3,
+      "00001011": 4,
+      "00110001": 2,
+      "10110000": 4,
+      "01101000": 9,
+      "00101100": 2,
+      "10100100": 4,
+      "00001101": 1,
+      "00101001": 1,
+      "10001100": 2,
+      "01001001": 1
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.16015625,
+     "optimal_probability_given_valid": 0.16015625,
+     "uniform_optimal_probability": 0.03571428571428571,
+     "optimal_probability_amplification": 4.484375,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       0.22174238667741838,
+       0.8707812148061116,
+       0.03283444237379471,
+       0.5504443746729759,
+       -0.26220479051132983,
+       2.6291526476477474
+      ],
+      "gamma": [
+       0.22174238667741838,
+       0.8707812148061116,
+       0.03283444237379471
+      ],
+      "beta": [
+       0.5504443746729759,
+       -0.26220479051132983,
+       2.6291526476477474
+      ],
+      "approximate_energy": -0.726461133748683,
+      "converged": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "evaluations": 300,
+      "restarts": 2,
+      "maxiter": 150,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 519,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 18,
+       "rzz": 18,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   },
+   "baseline": {
+    "schema_version": 1,
+    "case_id": "synthetic-baseline",
+    "case_revision": 1,
+    "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      2,
+      5,
+      6
+     ],
+     "selected_site_ids": [
+      "2",
+      "5",
+      "6"
+     ],
+     "covered_weight": 1845.0,
+     "coverage_pct": 79.6976241900648,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.0003895439986081328,
+      "solve_s": 0.00010231899796053767,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      1,
+      2,
+      5
+     ],
+     "selected_site_ids": [
+      "1",
+      "2",
+      "5"
+     ],
+     "covered_weight": 2086.0,
+     "coverage_pct": 90.10799136069114,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.0003895439986081328,
+      "solve_s": 0.00043294200077070855,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 840,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       1,
+       2,
+       5
+      ],
+      [
+       2,
+       4,
+       5
+      ]
+     ],
+     "n_optimal_solutions": 2
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "synthetic-baseline",
+     "case_revision": 1,
+     "input_fingerprint": "ac5eb7f73050793b2c1093adb23d270befe6722de38e44220247a30c4d294861",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      1,
+      2,
+      5
+     ],
+     "selected_site_ids": [
+      "1",
+      "2",
+      "5"
+     ],
+     "covered_weight": 2086.0,
+     "coverage_pct": 90.10799136069114,
+     "total_weight": 2315.0,
+     "weight_units": "thousand people",
+     "timings": {
+      "coverage_s": 0.00039845900028012693,
+      "solve_s": null,
+      "quantum_prepare_s": 0.007354025001404807,
+      "local_optimization_s": 35.698526593998395,
+      "transpile_s": 0.2338712509990728,
+      "backend_job_s": 0.042350941002951004
+     },
+     "counts": {
+      "00100101": 152,
+      "01000110": 28,
+      "01100001": 65,
+      "00010101": 10,
+      "10100100": 49,
+      "11000001": 11,
+      "00110100": 106,
+      "01100010": 58,
+      "00100110": 166,
+      "01100100": 112,
+      "01101000": 7,
+      "01010100": 48,
+      "11010000": 9,
+      "01000101": 21,
+      "00101100": 5,
+      "10000110": 29,
+      "00111000": 4,
+      "00010110": 8,
+      "01000011": 1,
+      "00001110": 18,
+      "11100000": 11,
+      "01110000": 17,
+      "10000101": 7,
+      "00011001": 1,
+      "10100010": 1,
+      "00110001": 10,
+      "00101010": 1,
+      "11000010": 3,
+      "01001100": 3,
+      "11000100": 11,
+      "00011100": 8,
+      "01010001": 3,
+      "00110010": 7,
+      "10010001": 2,
+      "01011000": 5,
+      "00011010": 2,
+      "00000111": 1,
+      "10100001": 3,
+      "10110000": 3,
+      "01001001": 1,
+      "10101000": 2,
+      "00001011": 1,
+      "10010100": 1,
+      "00001101": 4,
+      "00101001": 2,
+      "01010010": 4,
+      "01001010": 2,
+      "10001010": 1
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.265625,
+     "optimal_probability_given_valid": 0.265625,
+     "uniform_optimal_probability": 0.03571428571428571,
+     "optimal_probability_amplification": 7.4375,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       -0.7810253352904297,
+       1.5192485985494992,
+       1.2965591881752399,
+       0.25566867040313557,
+       2.72348300770905,
+       -0.30493780978682644
+      ],
+      "gamma": [
+       -0.7810253352904297,
+       1.5192485985494992,
+       1.2965591881752399
+      ],
+      "beta": [
+       0.25566867040313557,
+       2.72348300770905,
+       -0.30493780978682644
+      ],
+      "approximate_energy": -0.771738375759307,
+      "converged": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "evaluations": 1895,
+      "restarts": 4,
+      "maxiter": 500,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 519,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 18,
+       "rzz": 18,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   }
+  },
+  "caba-comuna4": {
+   "app": {
+    "schema_version": 1,
+    "case_id": "caba-comuna4",
+    "case_revision": 1,
+    "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      1,
+      2,
+      7
+     ],
+     "selected_site_ids": [
+      "H07",
+      "H13",
+      "B43"
+     ],
+     "covered_weight": 176818.0,
+     "coverage_pct": 81.0181218355518,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.004088364999915939,
+      "solve_s": 0.00035609699989436194,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      2,
+      3,
+      7
+     ],
+     "selected_site_ids": [
+      "H13",
+      "H16",
+      "B43"
+     ],
+     "covered_weight": 185708.0,
+     "coverage_pct": 85.09152557905107,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.004088364999915939,
+      "solve_s": 0.0025094529992202297,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 14112,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       2,
+       3,
+       7
+      ]
+     ],
+     "n_optimal_solutions": 1
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      2,
+      3,
+      7
+     ],
+     "selected_site_ids": [
+      "H13",
+      "H16",
+      "B43"
+     ],
+     "covered_weight": 185708.0,
+     "coverage_pct": 85.09152557905107,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.003768443999433657,
+      "solve_s": null,
+      "quantum_prepare_s": 0.004973344999598339,
+      "local_optimization_s": 4.443569577000744,
+      "transpile_s": 0.07620762499936973,
+      "backend_job_s": 0.019750998999370495
+     },
+     "counts": {
+      "00010101": 84,
+      "01100010": 26,
+      "10000101": 22,
+      "00001011": 24,
+      "00011001": 10,
+      "11100000": 95,
+      "10000110": 8,
+      "01000110": 115,
+      "10001100": 18,
+      "00110100": 10,
+      "11000010": 69,
+      "01110000": 63,
+      "00100110": 38,
+      "01010100": 16,
+      "00101010": 4,
+      "11000100": 23,
+      "01001100": 8,
+      "00111000": 21,
+      "11010000": 11,
+      "10010001": 34,
+      "10011000": 5,
+      "00000111": 21,
+      "00011100": 23,
+      "01001010": 25,
+      "00001101": 15,
+      "01000011": 33,
+      "00100101": 11,
+      "10100100": 46,
+      "10100010": 5,
+      "01011000": 1,
+      "00110001": 22,
+      "11000001": 1,
+      "10001001": 16,
+      "00010011": 2,
+      "00101001": 6,
+      "10100001": 16,
+      "00110010": 10,
+      "00010110": 6,
+      "00101100": 2,
+      "01100001": 1,
+      "11001000": 7,
+      "01100100": 13,
+      "01101000": 7,
+      "01000101": 11,
+      "00100011": 3,
+      "10110000": 1,
+      "10010010": 2,
+      "10101000": 5,
+      "01010010": 2,
+      "00011010": 1,
+      "00001110": 2,
+      "01010001": 1,
+      "10001010": 1,
+      "10000011": 2
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.017578125,
+     "optimal_probability_given_valid": 0.017578125,
+     "uniform_optimal_probability": 0.017857142857142856,
+     "optimal_probability_amplification": 0.984375,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       0.8133061130775653,
+       3.342812986459705,
+       1.44140563298123,
+       0.5411455115619185,
+       0.4437112305878387,
+       1.7771779523146052
+      ],
+      "gamma": [
+       0.8133061130775653,
+       3.342812986459705,
+       1.44140563298123
+      ],
+      "beta": [
+       0.5411455115619185,
+       0.4437112305878387,
+       1.7771779523146052
+      ],
+      "approximate_energy": -0.7362108640604019,
+      "converged": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "evaluations": 300,
+      "restarts": 2,
+      "maxiter": 150,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 540,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "rzz": 51,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 23,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   },
+   "baseline": {
+    "schema_version": 1,
+    "case_id": "caba-comuna4",
+    "case_revision": 1,
+    "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      1,
+      2,
+      7
+     ],
+     "selected_site_ids": [
+      "H07",
+      "H13",
+      "B43"
+     ],
+     "covered_weight": 176818.0,
+     "coverage_pct": 81.0181218355518,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.0015876030010986142,
+      "solve_s": 0.00015850300042075105,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      2,
+      3,
+      7
+     ],
+     "selected_site_ids": [
+      "H13",
+      "H16",
+      "B43"
+     ],
+     "covered_weight": 185708.0,
+     "coverage_pct": 85.09152557905107,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.0015876030010986142,
+      "solve_s": 0.0010514870009501465,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 14112,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       2,
+       3,
+       7
+      ]
+     ],
+     "n_optimal_solutions": 1
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "caba-comuna4",
+     "case_revision": 1,
+     "input_fingerprint": "66d465d78c39b9fa974b48b2dbfb954324bdb8b5a823aefc4d0079148d630061",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 1.8,
+     "selected_site_indices": [
+      2,
+      3,
+      7
+     ],
+     "selected_site_ids": [
+      "H13",
+      "H16",
+      "B43"
+     ],
+     "covered_weight": 185708.0,
+     "coverage_pct": 85.09152557905107,
+     "total_weight": 218245.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.0017328950016235467,
+      "solve_s": null,
+      "quantum_prepare_s": 0.00230380100038019,
+      "local_optimization_s": 11.282421208001324,
+      "transpile_s": 0.25990256300065084,
+      "backend_job_s": 0.09267777199784177
+     },
+     "counts": {
+      "00010101": 85,
+      "01100010": 28,
+      "10000011": 2,
+      "00001011": 22,
+      "00011001": 11,
+      "11100000": 91,
+      "10000101": 22,
+      "01000110": 116,
+      "10001100": 17,
+      "00110100": 12,
+      "00010110": 7,
+      "11000010": 67,
+      "01110000": 66,
+      "00100110": 35,
+      "01010100": 15,
+      "00101010": 5,
+      "11000100": 25,
+      "01010010": 3,
+      "00111000": 18,
+      "11010000": 15,
+      "10010001": 33,
+      "00000111": 23,
+      "00011100": 27,
+      "01001100": 7,
+      "00001101": 15,
+      "01000011": 28,
+      "00100011": 1,
+      "01010001": 2,
+      "10100100": 46,
+      "10100010": 3,
+      "00110001": 22,
+      "01101000": 9,
+      "10101000": 7,
+      "10000110": 8,
+      "01001010": 22,
+      "10001001": 18,
+      "01000101": 17,
+      "10010010": 2,
+      "10100001": 12,
+      "00101100": 2,
+      "11000001": 2,
+      "10011000": 6,
+      "11001000": 5,
+      "01100100": 13,
+      "00100101": 10,
+      "01011000": 4,
+      "00011010": 1,
+      "00101001": 5,
+      "00110010": 8,
+      "00010011": 2,
+      "10010100": 1,
+      "00001110": 1
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.0166015625,
+     "optimal_probability_given_valid": 0.0166015625,
+     "uniform_optimal_probability": 0.017857142857142856,
+     "optimal_probability_amplification": 0.9296875,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       0.805995157205024,
+       3.361423145736248,
+       1.3565014919663145,
+       0.5311188060010104,
+       0.4290971439927611,
+       1.7522332986200346
+      ],
+      "gamma": [
+       0.805995157205024,
+       3.361423145736248,
+       1.3565014919663145
+      ],
+      "beta": [
+       0.5311188060010104,
+       0.4290971439927611,
+       1.7522332986200346
+      ],
+      "approximate_energy": -0.7363537506000081,
+      "converged": true,
+      "message": "Return from COBYLA because the trust region radius reaches its lower bound.",
+      "evaluations": 1644,
+      "restarts": 4,
+      "maxiter": 500,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 540,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "rzz": 51,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 23,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   }
+  },
+  "caba": {
+   "app": {
+    "schema_version": 1,
+    "case_id": "caba",
+    "case_revision": 1,
+    "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.052403238998522284,
+      "solve_s": 0.005034147998230765,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.052403238998522284,
+      "solve_s": 0.030117819998849882,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 198912,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       0,
+       2,
+       6
+      ]
+     ],
+     "n_optimal_solutions": 1
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.07676205900133937,
+      "solve_s": null,
+      "quantum_prepare_s": 0.0045335469985730015,
+      "local_optimization_s": 5.30989826899895,
+      "transpile_s": 0.26238114300213056,
+      "backend_job_s": 0.04910754800221184
+     },
+     "counts": {
+      "00010101": 194,
+      "01010001": 160,
+      "00001101": 21,
+      "11000001": 25,
+      "11000100": 20,
+      "01000101": 107,
+      "01010100": 73,
+      "00101001": 5,
+      "01110000": 40,
+      "10000101": 19,
+      "11100000": 24,
+      "10001100": 18,
+      "01001001": 7,
+      "10100001": 10,
+      "10101000": 7,
+      "00110100": 3,
+      "00000111": 24,
+      "01000110": 27,
+      "10000110": 7,
+      "00110001": 59,
+      "01100010": 4,
+      "00001011": 2,
+      "01100001": 23,
+      "00100011": 2,
+      "01100100": 37,
+      "00011100": 19,
+      "01010010": 2,
+      "11001000": 9,
+      "00010011": 5,
+      "00100101": 10,
+      "10010001": 14,
+      "01011000": 7,
+      "11010000": 7,
+      "00001110": 6,
+      "10010100": 6,
+      "10100100": 1,
+      "00110010": 2,
+      "00101100": 1,
+      "00100110": 8,
+      "00111000": 3,
+      "00011001": 1,
+      "10011000": 1,
+      "10001010": 1,
+      "01001010": 1,
+      "01001100": 1,
+      "01000011": 1
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.1044921875,
+     "optimal_probability_given_valid": 0.1044921875,
+     "uniform_optimal_probability": 0.017857142857142856,
+     "optimal_probability_amplification": 5.8515625,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       2.2132249682276637,
+       1.156196543797623,
+       -0.21340934711351925,
+       1.9772100072311538,
+       0.06078858385432062,
+       0.6973164669815869
+      ],
+      "gamma": [
+       2.2132249682276637,
+       1.156196543797623,
+       -0.21340934711351925
+      ],
+      "beta": [
+       1.9772100072311538,
+       0.06078858385432062,
+       0.6973164669815869
+      ],
+      "approximate_energy": -0.4552827193332334,
+      "converged": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "evaluations": 300,
+      "restarts": 2,
+      "maxiter": 150,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 528,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "rzz": 30,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 23,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   },
+   "baseline": {
+    "schema_version": 1,
+    "case_id": "caba",
+    "case_revision": 1,
+    "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+    "greedy": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "greedy",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.08289200400031405,
+      "solve_s": 0.00513640899953316,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     }
+    },
+    "exact": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "exact",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.08289200400031405,
+      "solve_s": 0.031300726001063595,
+      "quantum_prepare_s": null,
+      "local_optimization_s": null,
+      "transpile_s": null,
+      "backend_job_s": null
+     },
+     "combination_count": 56,
+     "max_combinations": 10000,
+     "estimated_zone_work": 198912,
+     "max_zone_work": 5000000,
+     "optimal_selections": [
+      [
+       0,
+       2,
+       6
+      ]
+     ],
+     "n_optimal_solutions": 1
+    },
+    "qaoa": {
+     "schema_version": 1,
+     "case_id": "caba",
+     "case_revision": 1,
+     "input_fingerprint": "8fb7d47e300e61b1f676e8e9a929c306a50ba49445d291eae4b8d4e6656f55cd",
+     "method": "qaoa",
+     "status": "ok",
+     "message": null,
+     "k": 3,
+     "n_sites": 8,
+     "radius_km": 3.0,
+     "selected_site_indices": [
+      0,
+      2,
+      6
+     ],
+     "selected_site_ids": [
+      "H17",
+      "H10",
+      "H12"
+     ],
+     "covered_weight": 1682455.0,
+     "coverage_pct": 58.21339438666008,
+     "total_weight": 2890151.0,
+     "weight_units": "personas",
+     "timings": {
+      "coverage_s": 0.08283947800009628,
+      "solve_s": null,
+      "quantum_prepare_s": 0.010900186000071699,
+      "local_optimization_s": 68.03122025600169,
+      "transpile_s": 0.45301549500072724,
+      "backend_job_s": 0.10637112599943066
+     },
+     "counts": {
+      "00100011": 10,
+      "01000101": 421,
+      "00001101": 48,
+      "00100101": 11,
+      "10010100": 8,
+      "00010011": 4,
+      "10100100": 1,
+      "01001100": 5,
+      "01010100": 67,
+      "01010001": 60,
+      "01100001": 48,
+      "11001000": 8,
+      "01000011": 40,
+      "01011000": 2,
+      "01101000": 11,
+      "00010101": 38,
+      "10001100": 19,
+      "00111000": 1,
+      "00000111": 20,
+      "00101001": 35,
+      "11010000": 3,
+      "00011100": 12,
+      "00101100": 4,
+      "01010010": 12,
+      "11000001": 22,
+      "10100001": 17,
+      "00001110": 5,
+      "00100110": 6,
+      "11100000": 2,
+      "01000110": 17,
+      "00011001": 9,
+      "10010001": 13,
+      "10000101": 6,
+      "10001001": 12,
+      "01100100": 3,
+      "00011010": 1,
+      "01001010": 1,
+      "00110001": 2,
+      "10001010": 2,
+      "00101010": 1,
+      "10101000": 3,
+      "11000010": 3,
+      "10000110": 2,
+      "00010110": 3,
+      "00110100": 1,
+      "10100010": 1,
+      "01001001": 2,
+      "00001011": 2
+     },
+     "shots": 1024,
+     "requested_shots": 1024,
+     "valid_shots": 1024,
+     "invalid_shots": 0,
+     "malformed_shots": 0,
+     "valid_shot_rate": 1.0,
+     "optimal_probability": 0.4111328125,
+     "optimal_probability_given_valid": 0.4111328125,
+     "uniform_optimal_probability": 0.017857142857142856,
+     "optimal_probability_amplification": 23.0234375,
+     "backend": {
+      "name": "basic_simulator",
+      "class": "BasicSimulator",
+      "module": "qiskit.providers.basic_provider.basic_simulator",
+      "is_simulator": true
+     },
+     "backend_run_calls": 1,
+     "error_stage": null,
+     "optimizer": {
+      "angles": [
+       1.8543100137192114,
+       2.5129455336841025,
+       2.295517551634793,
+       -0.6933810169659491,
+       2.820212031857855,
+       -0.2921767506842673
+      ],
+      "gamma": [
+       1.8543100137192114,
+       2.5129455336841025,
+       2.295517551634793
+      ],
+      "beta": [
+       -0.6933810169659491,
+       2.820212031857855,
+       -0.2921767506842673
+      ],
+      "approximate_energy": -0.49253663799559955,
+      "converged": false,
+      "message": "Return from COBYLA because the objective function has been evaluated MAXFUN times.",
+      "evaluations": 2000,
+      "restarts": 4,
+      "maxiter": 500,
+      "seed": 1
+     },
+     "circuit": {
+      "logical_qubits": 8,
+      "compiled_qubits": 8,
+      "compiled_depth": 528,
+      "compiled_operations": {
+       "cx": 247,
+       "u3": 124,
+       "u2": 102,
+       "rzz": 30,
+       "u1": 29,
+       "rxx": 24,
+       "ryy": 24,
+       "rz": 23,
+       "measure": 8,
+       "barrier": 1
+      },
+      "layers": 3,
+      "cost_scale": 5.0,
+      "objective": "normalized pairwise quadratic approximation"
+     }
+    }
+   }
+  }
+ }
+}
