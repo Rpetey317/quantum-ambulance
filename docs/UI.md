@@ -41,12 +41,21 @@ Qollab entrypoint. Root HTML contains body content only; Qollab loads the single
 The shell uses relative JS imports and dotted Python imports with
 `.callPromising`. Python names packaged data paths as literals; JS never fetches
 project assets. The global visitor-selected `backend` is passed to the adapter;
-there is no provider selection, enumeration, sampler fallback or retry.
+there is no provider selection, enumeration, sampler fallback or retry. The
+root `main.js` keeps Qollab's top-level Run pending while the user edits and
+until the first quantum attempt finishes (including failure). This mirrors the
+spike's successful remote submission path: submitting on a later click after
+the top-level script completed produced a network error. If no quantum job is
+requested, use Qollab Stop to end the Run. A fresh Run is required for another
+IonQ job; save portable case JSON before starting it.
 
-1. Select the built-in simulator in a Qollab Run. Load all cases, drag and
-   numerically edit candidates, change K, remove/add a site, and compare layers.
-2. Sample eight shots. Check exactly-K validity, separate local tuning and
-   backend/job wall time, then edit again and verify quantum staleness.
+1. Select the built-in simulator in a Qollab Run. Confirm Run remains active
+   while loading all cases, dragging and numerically editing candidates, changing
+   K, removing/adding a site, and comparing layers.
+2. Sample eight shots. Confirm Run remains active through backend submission and
+   finishes only after the result or error is displayed. Check exactly-K validity,
+   separate local tuning and backend/job wall time, then edit again and verify
+   quantum staleness.
 3. Copy portable JSON, Stop, start a new Run, paste and restore. Edits reset;
    restore uses original demand zones/provenance and saved candidate edits.
 4. After platform/circuit/shot-cost checks, select an IonQ **simulator** in a new

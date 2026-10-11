@@ -2,7 +2,7 @@ import * as bridge from "ambulance.bridge";
 import { mount } from "./ui/app.js";
 
 // Qollab injects the visitor-selected backend; never instantiate a provider here.
-mount(document.getElementById("app"), {
+const controller = mount(document.getElementById("app"), {
   loadCase: async (id) => JSON.parse(await bridge.case_data.callPromising(id)),
   preview: async (data) =>
     JSON.parse(await bridge.preview.callPromising(JSON.stringify(data))),
@@ -17,3 +17,4 @@ mount(document.getElementById("app"), {
       ),
     ),
 });
+await controller.firstQuantumCompleted;

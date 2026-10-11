@@ -14,6 +14,9 @@ export class Controller {
     this.generation = 0;
     this.loadRequest = 0;
     this.sessionReserved = false;
+    this.firstQuantumCompleted = new Promise((resolve) => {
+      this.completeFirstQuantum = resolve;
+    });
     this.state = {
       data: null,
       bounds: null,
@@ -163,6 +166,7 @@ export class Controller {
     } finally {
       this.state.busy = false;
       this.emit();
+      this.completeFirstQuantum();
     }
     return true;
   }

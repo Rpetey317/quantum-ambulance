@@ -1,0 +1,36 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #162b38; background: #f4f7f7; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.app { max-width: 970px; margin: 0 auto; padding: 1.5rem; }
+header { padding: 1rem 0 1.5rem; }
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.08; margin: .3rem 0; }
+h2 { margin-top: 0; font-size: 1.3rem; }
+p { line-height: 1.5; }
+.eyebrow { text-transform: uppercase; font-size: .8rem; letter-spacing: .12em; font-weight: 700; color: #145b65; }
+section { margin: 1rem 0; padding: 1.25rem; background: #fff; border: 1px solid #c8d6d9; border-radius: 12px; }
+.editor { display: grid; grid-template-columns: minmax(200px, 390px) 1fr; gap: 1.5rem; align-items: start; }
+#map { max-width: 100%; width: 390px; background: #f4f9f9; border: 1px solid #c8d6d9; border-radius: 8px; touch-action: none; }
+.plot { fill: none; stroke: #89a7ad; stroke-width: 2; }
+.zone { fill: #c9e3e6; stroke: #0c6974; stroke-width: 2; }
+.zone.covered { fill: #ffc75f; stroke: #835300; }
+.zone-label { font-size: 12px; fill: #233842; }
+#siteMarker { fill: #b53934; stroke: #fff; stroke-width: 3; cursor: grab; }
+#siteMarker:active { cursor: grabbing; }
+#siteLabel { font-size: 14px; font-weight: 700; fill: #751d1a; pointer-events: none; }
+.controls { display: grid; grid-template-columns: 1fr minmax(75px, 105px); gap: .8rem; align-items: center; }
+.controls p, .controls output { grid-column: 1 / -1; margin: 0; }
+.controls output { display: block; background: #e9f2f3; padding: 1rem; border-radius: 6px; line-height: 1.5; }
+label { font-weight: 600; }
+input, textarea, button, select { font: inherit; }
+input, select { max-width: 100%; padding: .45rem; border: 1px solid #738b91; border-radius: 5px; }
+input { width: 100%; }
+button { padding: .55rem .85rem; border: 1px solid #145b65; background: #145b65; color: white; border-radius: 5px; cursor: pointer; }
+button:hover:not(:disabled) { background: #10444c; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, #siteMarker:focus-visible { outline: 3px solid #b53934; outline-offset: 2px; }
+button:disabled { cursor: not-allowed; opacity: .55; }
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+textarea { width: 100%; padding: .7rem; border: 1px solid #738b91; border-radius: 5px; resize: vertical; }
+pre { overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #e9f2f3; padding: 1rem; border-radius: 6px; }
+details { margin-top: 1rem; }
+summary { cursor: pointer; font-weight: 600; }
+@media (max-width: 650px) { .app { padding: .6rem; } section { padding: .9rem; } .editor { grid-template-columns: 1fr; } }

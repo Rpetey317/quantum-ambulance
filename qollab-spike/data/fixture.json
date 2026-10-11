@@ -1,0 +1,9 @@
+{
+  "site": {"id": "S0", "x": 5, "y": 5},
+  "radius": 2,
+  "zones": [
+    {"id": "A", "x": 1, "y": 5, "population": 10},
+    {"id": "B", "x": 5, "y": 5, "population": 20},
+    {"id": "C", "x": 9, "y": 5, "population": 30}
+  ]
+}

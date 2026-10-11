@@ -1,0 +1,66 @@
+<div class="app">
+  <header>
+    <p class="eyebrow">Qollab platform spike · issue #1</p>
+    <h1>Does the whole loop work?</h1>
+    <p>Edit a synthetic site, ask Python for a local preview, then send one tiny measured circuit to the backend you selected in Qollab's Run dialog. This is not the ambulance optimizer.</p>
+  </header>
+
+  <section aria-labelledby="environment-title">
+    <h2 id="environment-title">1. Runtime and packaged file</h2>
+    <p id="backendStatus" aria-live="polite">Checking selected backend…</p>
+    <p id="fileStatus" aria-live="polite">Loading packaged data/fixture.json…</p>
+    <button id="checkFile" type="button">Read packaged file again</button>
+  </section>
+
+  <section aria-labelledby="case-title">
+    <h2 id="case-title">2. Edit a case, preview in Python</h2>
+    <p>Drag the S0 marker or use the numeric fields. Coordinates are synthetic 0–10 grid units, not city streets or travel times. A one-site radius check reports true covered population without double counting.</p>
+    <div class="editor">
+      <svg id="map" viewBox="0 0 400 400" role="img" aria-label="Synthetic zone map; site S0 can be dragged. Numeric controls below provide the same edit.">
+        <rect x="20" y="20" width="360" height="360" class="plot" />
+        <g id="zones"></g>
+        <circle id="siteMarker" cx="200" cy="200" r="13" tabindex="0" aria-label="Site S0; use numeric controls to edit coordinates" />
+        <text id="siteLabel" x="218" y="194">S0</text>
+      </svg>
+      <div class="controls">
+        <label for="siteX">Site x (0–10)</label><input id="siteX" type="number" min="0" max="10" step="0.1" value="5" />
+        <label for="siteY">Site y (0–10)</label><input id="siteY" type="number" min="0" max="10" step="0.1" value="5" />
+        <label for="radius">Coverage radius (grid units)</label><input id="radius" type="number" min="0.1" max="10" step="0.1" value="2" />
+        <p id="caseStatus" aria-live="polite">Loading case…</p>
+        <output id="preview" aria-live="polite">Waiting for Python.</output>
+      </div>
+    </div>
+    <details>
+      <summary>Move this case into another Qollab Run</summary>
+      <p>Copy the text below outside Qollab before pressing Run again. New Runs may reset this page; paste it back and press Load pasted case to check a manual fallback.</p>
+      <textarea id="caseTransfer" rows="8" spellcheck="false" aria-label="Case JSON for manual transfer"></textarea>
+      <div class="actions"><button id="showCase" type="button">Show current case JSON</button><button id="loadCase" type="button">Load pasted case</button></div>
+    </details>
+  </section>
+
+  <section aria-labelledby="job-title">
+    <h2 id="job-title">3. Probe selected backend</h2>
+    <p>RY angle = π × site x / 10. At x = 0, all measured bits should be 0; at x = 10, all should be 1 on an ideal simulator. These are circuit outcomes, not ambulance selections.</p>
+    <label for="jobPath">Submission path</label>
+    <select id="jobPath"><option value="python">Python .callPromising(backend) (documented route)</option><option value="js">JS backend.run (original route)</option></select>
+    <p>The Python route submits inside the asynchronous Python bridge; the original JS route remains available for comparison. The app now keeps Qollab's Run active through both job buttons to test whether backend access depends on that lifetime. If you do not want to test the second job, press Qollab Stop after copying the first result. Select a route <strong>before</strong> the first job; testing the other route on an IonQ simulator requires a fresh Qollab Run.</p>
+    <div class="actions"><button id="firstJob" type="button" disabled>Run first backend job</button><button id="secondJob" type="button" disabled>Try second job with same case</button></div>
+    <p>The second-job probe intentionally tests Qollab's limit. <strong>Copy the evidence before pressing it</strong>: on an IonQ simulator the second request may fail or end this Run. Use only a free simulator, never a paid QPU.</p>
+    <p id="jobStatus" aria-live="polite">No backend job requested yet.</p>
+    <pre id="jobResult">No counts yet.</pre>
+  </section>
+
+  <section aria-labelledby="fetch-title">
+    <h2 id="fetch-title">4. Test external static GET</h2>
+    <p>This separate check tries to read this repository's public README from GitHub's raw static-file host. A failure is evidence for this host/browser combination, not proof that all external hosts are blocked.</p>
+    <button id="fetchAsset" type="button">Try read-only external GET</button>
+    <p id="fetchStatus" aria-live="polite">Not tested.</p>
+  </section>
+
+  <section aria-labelledby="evidence-title">
+    <h2 id="evidence-title">Evidence to send back</h2>
+    <p>Copy this JSON before leaving a Run. It contains the input snapshot, backend name, counts/errors and file/fetch checks, but no credentials.</p>
+    <textarea id="evidence" rows="16" readonly spellcheck="false" aria-label="Copyable validation evidence JSON"></textarea>
+    <button id="selectEvidence" type="button">Select evidence text</button>
+  </section>
+</div>

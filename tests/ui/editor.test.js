@@ -254,6 +254,52 @@ test("editing during a quantum job makes its eventual result stale", async () =>
   assert.equal(c.state.quantumState, "stale");
   assert.equal(overlay(c.state.quantum, c.state.comparison).sites.size, 0);
 });
+test("the Qollab entrypoint awaits the first quantum attempt at top level", () => {
+  const main = readFileSync(new URL("../../main.js", import.meta.url), "utf8");
+  assert.match(main, /^await controller\.firstQuantumCompleted;$/m);
+});
+test("the Qollab Run stays pending through edits and its first quantum attempt", async () => {
+  const job = deferred();
+  let submitted;
+  const c = new Controller(
+    transport({
+      runQuantum: (data) => {
+        submitted = data;
+        return job.promise;
+      },
+    }),
+  );
+  await c.init();
+  assert.ok(c.firstQuantumCompleted instanceof Promise);
+  let completed = false;
+  c.firstQuantumCompleted.then(() => {
+    completed = true;
+  });
+  await c.edit((data) => {
+    data.k = 2;
+  });
+  assert.equal(await c.run(0), false);
+  assert.equal(completed, false);
+  const run = c.run(8);
+  assert.equal(completed, false);
+  job.resolve({ qaoa: result(submitted) });
+  await run;
+  await c.firstQuantumCompleted;
+  assert.equal(c.state.quantumState, "ok");
+  assert.equal(completed, true);
+});
+test("a failed quantum attempt also releases the Qollab Run after showing the error", async () => {
+  const job = deferred();
+  const c = new Controller(transport({ runQuantum: () => job.promise }));
+  await c.init();
+  assert.ok(c.firstQuantumCompleted instanceof Promise);
+  const run = c.run(8);
+  job.reject(new Error("Remote submission failed"));
+  await run;
+  await c.firstQuantumCompleted;
+  assert.equal(c.state.quantumState, "failed");
+  assert.equal(c.state.quantumError, "Remote submission failed");
+});
 test("IonQ reserves one attempt before awaiting, including failed jobs and resets", async () => {
   let calls = 0;
   const job = deferred();
