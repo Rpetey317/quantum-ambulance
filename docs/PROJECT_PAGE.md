@@ -99,14 +99,13 @@ the original prototype) instead of the app's default (2 × 150). Full table:
 
 ### Qollab runs
 
-Fill one row per Qollab Run (same case and inputs per comparison). See "How to
-run" below.
+The following are example runs done on the pre-loaded 'CABA - Comuna 4' dataset on the [Qollab project](https://qollab.xyz/u/rpetey317/ambulance-localizer):
 
-| Case (rev) | Backend (Select QPU) | Shots | Valid exactly-K shots | QAOA best coverage | P(optimum) | Backend job time | Notes / errors |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| `TODO` | Built-in simulator | | | | | | |
-| `TODO` | IBM noise model (`TODO` name) | | | | | | |
-| `TODO` | IonQ simulator (`TODO` name) | ≤128 | | | | | |
+| Backend (Select QPU) | Shots | Valid exactly-K shots | QAOA best coverage | P(optimum) | Backend job time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Built-in simulator | 256 | 256 (100%) | 85.1% | 3.9% | 0.053s |
+| IBM noise model (Boston) | 64 | 26 (40.6%) | 81.4% | 0.0% | 34.741s |
+| IonQ simulator (Aria 2) | 64 | 14 (21.9) | 83.7% | 0.0% | 14.701s |
 
 ## How to run it on Qollab
 
