@@ -44,6 +44,13 @@ class Handler(SimpleHTTPRequestHandler):
                 self.respond(json.loads(bridge.case_data(parse_qs(url.query)["id"][0])))
             except (ValueError, KeyError) as error:
                 self.respond({"error": str(error)}, 400)
+        elif url.path == "/api/map":
+            try:
+                self.respond(
+                    json.loads(bridge.map_image(parse_qs(url.query)["style"][0]))
+                )
+            except (ValueError, KeyError) as error:
+                self.respond({"error": str(error)}, 400)
         else:
             super().do_GET()
 

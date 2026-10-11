@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from time import perf_counter
 
 SCHEMA_VERSION = 1
-QUANTUM_SITE_CAP = 8
+QUANTUM_SITE_CAP = 16
 EXACT_COMBINATION_LIMIT = 10_000
 EXACT_ZONE_WORK_LIMIT = 5_000_000
 

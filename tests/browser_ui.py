@@ -43,6 +43,33 @@ def check(browser_path, artifacts):
             algorithm = page.locator("#map-algorithm")
             expect(algorithm).to_have_value("greedy")
             expect(algorithm.locator('option[value="qaoa"]')).to_have_js_property("disabled", True)
+            background = page.locator("#map-background")
+            expect(background).to_have_value("streets")
+            expect(page.locator("#map-credit")).to_contain_text("OpenStreetMap")
+
+            def painted_fraction():
+                return page.evaluate(
+                    """() => {
+                    const c = document.querySelector('#map canvas');
+                    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+                    let painted = 0, total = 0;
+                    for (let i = 3; i < d.length; i += 397 * 4) {
+                        total++;
+                        if (d[i] > 100) painted++;
+                    }
+                    return painted / total;
+                }"""
+                )
+
+            assert painted_fraction() > 0.4
+            background.select_option("satellite")
+            expect(page.locator("#map-credit")).to_contain_text("Sentinel-2")
+            assert painted_fraction() > 0.4
+            background.select_option("plain")
+            expect(page.locator("#map-credit")).to_be_hidden()
+            assert painted_fraction() < 0.3
+            background.select_option("streets")
+            expect(page.locator("#map-credit")).to_contain_text("OpenStreetMap")
             exact.get_by_role("button").click()
             expect(algorithm).to_have_value("exact")
             algorithm.select_option("greedy")
@@ -135,6 +162,11 @@ def check(browser_path, artifacts):
 
             # Real sampled local BasicSimulator, then an edit removes its old layer.
             page.locator("#dataset").select_option("synthetic")
+            expect(background).to_have_value("abstract")
+            expect(background.locator('option[value="streets"]')).to_have_js_property("disabled", True)
+            expect(background.locator('option[value="satellite"]')).to_have_js_property("disabled", True)
+            expect(page.locator("#map-credit")).to_contain_text("Illustrated")
+            assert painted_fraction() > 0.4
             expect(greedy.locator(".percentage")).to_have_text("79.7%")
             expect(exact.locator(".percentage")).to_have_text("90.1%")
             page.locator("#shots").fill("8")
@@ -170,6 +202,7 @@ def check(browser_path, artifacts):
             page.locator("#snapshot").fill(json.dumps(custom))
             page.locator("#load-json").click()
             expect(page.locator("#dataset")).to_have_value("imported")
+            expect(background).to_have_value("streets")
             expect(page.locator("#revision-note")).to_contain_text("imported-case · revision draft-3")
             expect(page.locator("#provenance")).to_contain_text("Custom demand centroids")
             expect(greedy.locator(".status")).to_have_text("Current case")

@@ -4,6 +4,8 @@ import { mount } from "./ui/app.js";
 // Qollab injects the visitor-selected backend; never instantiate a provider here.
 const controller = mount(document.getElementById("app"), {
   loadCase: async (id) => JSON.parse(await bridge.case_data.callPromising(id)),
+  loadMap: async (style) =>
+    JSON.parse(await bridge.map_image.callPromising(style)),
   preview: async (data) =>
     JSON.parse(await bridge.preview.callPromising(JSON.stringify(data))),
   backendInfo: async () =>

@@ -12,7 +12,12 @@ from qiskit.providers.basic_provider import BasicSimulator
 from qiskit.quantum_info import Operator, Statevector
 
 from ambulance import bridge
-from ambulance.core import load_case, prepare_case, solve_exact
+from ambulance.core import (
+    QUANTUM_SITE_CAP,
+    load_case,
+    prepare_case,
+    solve_exact,
+)
 from ambulance.quantum import (
     build_qaoa,
     decode_bitstring,
@@ -271,11 +276,14 @@ class QuantumTests(unittest.TestCase):
 
     def test_site_and_run_limits_fail_before_a_backend_job(self):
         oversized = deepcopy(self.case)
-        oversized["sites"].append({"id": "extra", "x_km": 30, "y_km": 30})
+        for i in range(QUANTUM_SITE_CAP - len(oversized["sites"]) + 1):
+            oversized["sites"].append(
+                {"id": f"extra-{i}", "x_km": 30 + i, "y_km": 30}
+            )
         backend = CountingSimulator()
         result = run_qaoa(oversized, backend)
         self.assertEqual(result["status"], "failed")
-        self.assertIn("8 candidate sites", result["message"])
+        self.assertIn(f"{QUANTUM_SITE_CAP} candidate sites", result["message"])
         for settings in (
             {"shots": 0},
             {"shots": True},

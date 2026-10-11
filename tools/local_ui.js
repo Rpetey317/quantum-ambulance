@@ -18,6 +18,7 @@ async function request(path, data) {
 }
 mount(document.getElementById("app"), {
   loadCase: (id) => request(`/api/case?id=${encodeURIComponent(id)}`),
+  loadMap: (style) => request(`/api/map?style=${encodeURIComponent(style)}`),
   preview: (data) => request("/api/preview", data),
   backendInfo: async () => ({
     name: "Local test · BasicSimulator",

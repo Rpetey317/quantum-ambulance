@@ -2,8 +2,9 @@
 
 import json
 import unittest
+from base64 import b64decode
 
-from ambulance.bridge import case_data, preview
+from ambulance.bridge import case_data, map_image, preview
 
 
 class BridgeTests(unittest.TestCase):
@@ -17,6 +18,24 @@ class BridgeTests(unittest.TestCase):
                 self.assertEqual(result["case_id"], case["meta"]["id"])
                 self.assertEqual(result["case_revision"], case["meta"]["revision"])
                 self.assertEqual(result["exact"]["status"], "ok")
+
+    def test_packaged_map_images_are_bounded_webp_and_styles_are_limited(self):
+        for style in ("streets", "satellite"):
+            with self.subTest(style=style):
+                asset = json.loads(map_image(style))
+                self.assertEqual(asset["style"], style)
+                self.assertTrue(asset["image"].startswith("data:image/webp;base64,"))
+                self.assertEqual(
+                    asset["bounds"],
+                    {"minX": 11.0, "maxX": 33.0, "minY": 60.0, "maxY": 83.0},
+                )
+                self.assertTrue(asset["attribution"])
+                image = b64decode(asset["image"].split(",", 1)[1])
+                self.assertEqual(image[:4], b"RIFF")
+                self.assertEqual(image[8:12], b"WEBP")
+                self.assertLess(len(image), 2_000_000)
+        with self.assertRaisesRegex(ValueError, "unknown map style"):
+            map_image("../../other")
 
     def test_unknown_dataset_is_explicit(self):
         with self.assertRaisesRegex(ValueError, "unknown packaged case"):

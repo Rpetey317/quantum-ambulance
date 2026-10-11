@@ -33,14 +33,19 @@ UI has no npm dependencies/build step; Node is only for controller/model tests.
 ## Qollab packaging and smoke procedure
 
 Upload root `index.html`, `main.js`, `main.css`, `requirements.txt`, all four
-`ui/*.js` files, the `ambulance/` package and three `data/cases/*.json` assets,
-preserving paths. Do not use `tools/local_ui.js` or the local HTTP harness as a
-Qollab entrypoint. Root HTML contains body content only; Qollab loads the single
-`main.css` and executes `main.js`.
+`ui/*.js` files, the `ambulance/` package, three `data/cases/*.json` assets and
+both `data/map/*.webp` images, preserving paths. Do not use `tools/local_ui.js`
+or the local HTTP harness as a Qollab entrypoint. Root HTML contains body
+content only; Qollab loads the single `main.css` and executes `main.js`.
 
 The shell uses relative JS imports and dotted Python imports with
 `.callPromising`. Python names packaged data paths as literals; JS never fetches
-project assets. The global visitor-selected `backend` is passed to the adapter;
+project assets. Because JavaScript in the sandbox cannot read uploaded binary
+files, `ambulance.bridge.map_image` loads each WebP and returns it as a base64
+data URI together with its shared EPSG:9498 frame and attribution. The map then
+crops that citywide frame to the displayed case extent, so the same pair of
+images serves full CABA, Comuna 4 and future commune cases. The global
+visitor-selected `backend` is passed to the adapter;
 there is no provider selection, enumeration, sampler fallback or retry. The
 root `main.js` keeps Qollab's top-level Run pending while the user edits and
 until the first quantum attempt finishes (including failure). This mirrors the
@@ -97,6 +102,15 @@ Actual Qollab and IonQ remote checks have **not** been run by this implementatio
 - The map selector and the comparison cards both choose the showcased current
   solution; unavailable or stale methods are disabled in the selector. A stale
   QAOA selection falls back to a current classical layer when available.
+- The background selector offers a street map, a satellite image, an
+  illustrated flat-colour map and a plain canvas. Street/satellite are enabled
+  only for cases on the packaged EPSG:9498 city frame (detected from
+  `meta.crs`, including imported cases); other cases get the abstract or plain
+  background. Images render behind centroids, circles and markers through the
+  same projected transform, so dragging and scale stay metric. Imagery loads
+  once per style and is cached; failures fall back to the plain canvas with a
+  note. Attributions (OpenStreetMap/BBBike, Copernicus Sentinel-2 via Microsoft
+  Planetary Computer) display under the map.
 - Copy current case writes the full JSON to the clipboard when allowed, or
   selects it in the import/export box for manual copying. Load JSON validates
   a complete pasted case through Python before replacing the current case;
@@ -113,12 +127,16 @@ Actual Qollab and IonQ remote checks have **not** been run by this implementatio
 On 2026-10-11, local Chrome checks passed at 1440 px and 390 px: all datasets,
 real Python previews, compact/full-case dragging, numeric edits, duplicate
 rejection, site cap, safe K on removal, add, matching selected-site overlay,
-portable restore, and a real eight-shot BasicSimulator job followed by staleness.
-The browser test also injects transport fixtures for exact-unavailable,
-all-invalid, unsupported-backend and missing-asset displays; those are not
-remote-backend observations. Screenshot inspection confirmed readable mobile
-layout with no horizontal overflow. Controller tests cover async races and the
-single-attempt IonQ budget. The full regression suite passes 35 Python and 18
-JavaScript tests. Design rationale: [UI_DESIGN.md](UI_DESIGN.md).
+portable restore, map background switching (street/satellite/abstract/plain)
+with canvas pixel checks and attribution, and a real eight-shot BasicSimulator
+job followed by staleness. The browser test also injects transport fixtures for
+exact-unavailable, all-invalid, unsupported-backend and missing-asset displays;
+those are not remote-backend observations. Screenshot inspection confirmed
+readable mobile layout with no horizontal overflow and correctly aligned
+imagery for both Comuna 4 and full CABA. Controller tests cover async races and
+the single-attempt IonQ budget. The regression suite passes 26 JavaScript tests
+and 72 of 73 Python tests; the one failure is a pre-existing synthetic-case
+metadata validator issue unrelated to the UI. Design rationale:
+[UI_DESIGN.md](UI_DESIGN.md).
 
 UI/editor/bridge/tests/docs were developed with OpenAI Codex assistance.

@@ -58,6 +58,23 @@ no representan) estos datos.
 Atribución requerida por licencia: "Fuente: GCBA Datos Abiertos / INDEC,
 Censo Nacional 2010". `data/raw/` no se commitea: se regenera con el builder.
 
+## Fondos de mapa (`data/map/`)
+
+Dos imágenes WebP cubren el mismo marco de la ciudad en km EPSG:9498
+(x: 11–33, y: 60–83; ver `tools/build_map_assets.py`). `ambulance.bridge`
+las sirve a la UI, que recorta ese marco a la extensión de cada caso
+(CABA completa, Comuna 4, futuras comunas) — no son imágenes por caso.
+
+| Archivo | Contenido | Fuente | Licencia/atribución |
+| --- | --- | --- | --- |
+| `map/caba-streets.webp` | callejero cartográfico renderizado (uso de suelo, parques, agua, vías) | extracto BBBike/OpenStreetMap Buenos Aires | © OpenStreetMap contributors (ODbL) |
+| `map/caba-satellite.webp` | color real, una escena Sentinel-2 L2A de baja nubosidad (2024-09-24, tile T21HUB) | Microsoft Planetary Computer data API | Copernicus Sentinel Data Terms; atribuir "modified Copernicus Sentinel data" |
+
+Regenerar: `python tools/build_map_assets.py --satellite` (descarga, solo
+stdlib + pillow) y `python tools/build_map_assets.py --osm-zip <extracto.shp.zip>`
+(render local, requiere pillow + pyshp; el extracto crudo no se commitea).
+Ambas quedan por debajo del límite de 2 MB por archivo de Qollab.
+
 ## Regenerar
 
 ```bash

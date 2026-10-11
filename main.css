@@ -157,8 +157,14 @@ h3 {
 .map-controls label {
   width: 175px;
 }
-#map-algorithm option:disabled {
+#map-algorithm option:disabled,
+#map-background option:disabled {
   color: #8a99a2;
+}
+.map-credit {
+  font-size: 0.74rem;
+  color: #506670;
+  margin-top: 6px;
 }
 #map-method {
   color: var(--greedy);

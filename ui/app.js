@@ -7,6 +7,9 @@ import {
   backendPolicy,
   restoreFields,
   clone,
+  cabaFrame,
+  defaultMapStyle,
+  mapBackground,
 } from "./model.js";
 import { MetricMap } from "./map.js";
 
@@ -51,7 +54,28 @@ export function mount(root, transport) {
     method = "greedy",
     nextSite = 1,
     currentDataset = "caba-comuna4",
-    importedCase = null;
+    importedCase = null,
+    mapStyle = null;
+  const mapAssets = new Map();
+  async function ensureMapAsset(style) {
+    if (!transport.loadMap || mapAssets.has(style)) return;
+    mapAssets.set(style, { state: "loading" });
+    try {
+      const payload = await transport.loadMap(style);
+      const image = new Image();
+      image.src = payload.image;
+      await image.decode();
+      mapAssets.set(style, {
+        state: "ready",
+        image,
+        bounds: payload.bounds,
+        attribution: payload.attribution,
+      });
+    } catch {
+      mapAssets.set(style, { state: "failed" });
+    }
+    render(controller.state);
+  }
   const map = new MetricMap(
     $("#map"),
     (id) => {
@@ -107,13 +131,40 @@ export function mount(root, transport) {
     const result = method === "qaoa" ? state.quantum : comparison?.[method];
     const validLayer = available(method);
     root.style.setProperty("--layer-color", colors[method]);
+    const onCityFrame = cabaFrame(data);
+    for (const value of ["streets", "satellite"])
+      $(`#map-background option[value="${value}"]`).disabled = !onCityFrame;
+    let style =
+      mapStyle ?? (data ? defaultMapStyle(data) : $("#map-background").value);
+    if (!onCityFrame && ["streets", "satellite"].includes(style))
+      style = "abstract";
+    $("#map-background").value = style;
+    const asset = mapAssets.get(style);
+    if (onCityFrame && ["streets", "satellite"].includes(style))
+      ensureMapAsset(style);
+    const mode = mapBackground(data, style, asset?.state === "ready");
     map.update(
       data,
       state.bounds,
       overlay(validLayer ? result : null, comparison),
       active,
       colors[method],
+      mode === "image"
+        ? { mode, image: asset.image, bounds: asset.bounds }
+        : { mode },
     );
+    const credit = $("#map-credit");
+    credit.textContent =
+      mode === "image"
+        ? asset.attribution
+        : asset?.state === "loading"
+          ? "Loading map image…"
+          : asset?.state === "failed" && ["streets", "satellite"].includes(style)
+            ? "Background image unavailable."
+            : mode === "abstract"
+              ? "Illustrated background, not geographic data."
+              : "";
+    credit.hidden = !credit.textContent;
     $("#map-method").textContent =
       validLayer && result?.status === "ok"
         ? `${names[method]} coverage`
@@ -346,11 +397,16 @@ export function mount(root, transport) {
   $("#dataset").addEventListener("change", async (event) => {
     currentDataset = event.target.value;
     active = null;
+    mapStyle = null;
     if (currentDataset === "imported") await controller.importCase(importedCase);
     else await controller.load(currentDataset);
   });
   $("#map-algorithm").addEventListener("change", (event) => {
     method = event.target.value;
+    render(controller.state);
+  });
+  $("#map-background").addEventListener("change", (event) => {
+    mapStyle = event.target.value;
     render(controller.state);
   });
   $("#candidate").addEventListener("change", (event) => {
@@ -442,6 +498,7 @@ export function mount(root, transport) {
       if (!(await controller.importCase(saved))) return;
       importedCase = clone(controller.state.data);
       currentDataset = "imported";
+      mapStyle = null;
       $("#dataset option[value=imported]").disabled = false;
       $("#dataset").value = currentDataset;
       active = null;

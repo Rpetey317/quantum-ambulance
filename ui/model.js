@@ -134,6 +134,21 @@ export function overlay(result, identity) {
   };
 }
 
+// The packaged CABA backgrounds are rendered over a shared EPSG:9498 km frame;
+// only cases on that coordinate system can use them.
+export const cabaFrame = (data) => /9498/.test(data?.meta?.crs || "");
+export const MAP_STYLES = ["streets", "satellite", "abstract", "plain"];
+export const defaultMapStyle = (data) =>
+  cabaFrame(data) ? "streets" : "abstract";
+export function mapBackground(data, style, imageReady) {
+  if (!data || style === "plain") return "plain";
+  if (style === "streets" || style === "satellite") {
+    if (!cabaFrame(data)) return "abstract";
+    return imageReady ? "image" : "plain";
+  }
+  return "abstract";
+}
+
 export function backendPolicy(info) {
   const ionq = /ionq/i.test(
     `${info?.module || ""} ${info?.name || ""} ${info?.class || ""}`,

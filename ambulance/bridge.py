@@ -1,6 +1,7 @@
 """JSON-string entrypoints for Qollab's JS -> Python .callPromising bridge."""
 
 import json
+from base64 import b64encode
 
 from .core import evaluate_case, load_case
 
@@ -20,6 +21,40 @@ def case_data(case_id):
     else:
         raise ValueError("unknown packaged case")
     return json.dumps(case, allow_nan=False)
+
+
+# Both backgrounds cover the same EPSG:9498 kilometre frame (see
+# tools/build_map_assets.py); the UI crops it to each case extent.
+MAP_FRAME_KM = {"minX": 11.0, "maxX": 33.0, "minY": 60.0, "maxY": 83.0}
+MAP_STYLES = {
+    "streets": (
+        "data/map/caba-streets.webp",
+        "Street map © OpenStreetMap contributors, rendered from the BBBike "
+        "Buenos Aires extract",
+    ),
+    "satellite": (
+        "data/map/caba-satellite.webp",
+        "Contains modified Copernicus Sentinel-2 data (2024), rendered via "
+        "Microsoft Planetary Computer",
+    ),
+}
+
+
+def map_image(style):
+    if style not in MAP_STYLES:
+        raise ValueError("unknown map style")
+    path, attribution = MAP_STYLES[style]
+    with open(path, "rb") as source:
+        image = source.read()
+    return json.dumps(
+        {
+            "style": style,
+            "image": "data:image/webp;base64," + b64encode(image).decode("ascii"),
+            "bounds": MAP_FRAME_KM,
+            "attribution": attribution,
+        },
+        allow_nan=False,
+    )
 
 
 def describe_backend(backend):

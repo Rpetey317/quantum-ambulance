@@ -10,6 +10,9 @@ import {
   backendPolicy,
   clone,
   restoreFields,
+  cabaFrame,
+  defaultMapStyle,
+  mapBackground,
 } from "../../ui/model.js";
 import { Controller } from "../../ui/controller.js";
 
@@ -464,6 +467,38 @@ test("repeated native input commits leave revision and quantum validity unchange
   assert.equal(c.state.data.meta.revision, revision);
   assert.equal(c.state.quantumState, "ok");
   assert.ok(before);
+});
+test("map backgrounds default to city imagery only on the EPSG:9498 frame", () => {
+  const cases = Object.fromEntries(
+    ["synthetic", "caba-comuna4", "caba"].map((name) => [
+      name,
+      JSON.parse(
+        readFileSync(new URL(`../../data/cases/${name}.json`, import.meta.url)),
+      ),
+    ]),
+  );
+  assert.equal(cabaFrame(cases.synthetic), false);
+  assert.equal(cabaFrame(cases["caba-comuna4"]), true);
+  assert.equal(cabaFrame(cases.caba), true);
+  assert.equal(defaultMapStyle(cases.synthetic), "abstract");
+  assert.equal(defaultMapStyle(cases["caba-comuna4"]), "streets");
+  const importedCity = clone(cases["caba-comuna4"]);
+  importedCity.meta.id = "imported-case";
+  assert.equal(defaultMapStyle(importedCity), "streets");
+});
+test("map background modes gate imagery on frame and load state", () => {
+  const synthetic = { meta: { crs: "local Cartesian plane" } },
+    city = { meta: { crs: "EPSG:9498 POSGAR 2007 / CABA 2019" } };
+  assert.equal(mapBackground(null, "streets", true), "plain");
+  for (const style of ["streets", "satellite"]) {
+    assert.equal(mapBackground(city, style, true), "image");
+    assert.equal(mapBackground(city, style, false), "plain");
+    assert.equal(mapBackground(synthetic, style, true), "abstract");
+  }
+  assert.equal(mapBackground(city, "abstract", false), "abstract");
+  assert.equal(mapBackground(synthetic, "abstract", false), "abstract");
+  assert.equal(mapBackground(city, "plain", true), "plain");
+  assert.equal(mapBackground(synthetic, "plain", true), "plain");
 });
 test("backend policy is conservative for unknown backends and bounded for IonQ", () => {
   assert.equal(backendPolicy(null).singleJob, true);
