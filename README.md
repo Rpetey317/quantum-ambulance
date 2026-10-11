@@ -68,14 +68,14 @@ The QAOA cost is only a pairwise approximation of true union coverage. The origi
 - `ambulance/` — input-driven core, dynamic QAOA adapter, and JSON-string bridge.
 - `index.html`, `main.js`, `main.css`, `ui/` — Qollab entrypoint and reusable metric map/editor/comparison UI.
 - `data/cases/synthetic.json` — original synthetic inputs in the shared case format.
-- `tests/` — deterministic core and quantum adapter regressions, using local jobs only.
+- `tests/` — deterministic core, quantum adapter, bridge, `baseline.py` and data-case regressions, using local jobs only; see `docs/TESTING.md`. CI (`.github/workflows/tests.yml`) runs them on every PR.
 - `docs/` — integration contract and observed validation.
 - `examples/qollab_smoke.py` — intermediate Python-only Qollab smoke entrypoint.
 - `Idea.pdf` — Spanish pitch, methodology, reported results, hackathon checklist, and proposed presentation.
-- `QOLLAB.md` — Qollab platform notes: backend model, job limits, and the plan for porting `baseline.py` into a published Qollab project.
-- `data/` — real seed-data cases for the demo (GCBA open data): `cases/*.json` processed assets plus `README.md` with provenance, schema, and regeneration steps. Raw downloads are not committed.
-- `tools/` — `build_cases.py` regenerates the case assets from the public datasets (stdlib only); `validate_cases.py` checks the case contract and coverage sanity.
-- `tests/` — deterministic regressions for `baseline.py` and the data cases; see `docs/TESTING.md` (commands, coverage, manual Qollab checklist). CI runs them on every PR.
+- `QOLLAB.md` — Qollab backend notes, job limits, platform-spike validation findings, and the plan for porting `baseline.py`.
+- `qollab-spike/` — local-only JS/Python/one-qubit probe for issue #1 (not committed); not the ambulance app. See `QOLLAB.md` for validation steps.
+- `data/` — GCBA open-data seed cases: processed `cases/*.json` plus `README.md` with provenance, schema, and regeneration steps. Raw downloads are not committed.
+- `tools/` — `build_cases.py` regenerates the case assets from public datasets (stdlib only); `validate_cases.py` checks the case contract and coverage sanity.
 - `LICENSE` — MIT license.
 
-The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. No app is present yet; the basic local test suite is described in `docs/TESTING.md`.
+The pitch asks for attribution of prior work and AI assistance in the eventual hackathon submission; confirm the actual contributions and disclosures before publishing. Core/adapter and UI work used OpenAI Codex assistance, as recorded in the contract and UI documentation. CI runs the Python and UI test suites on every PR (see `docs/TESTING.md`).

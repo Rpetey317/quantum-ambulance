@@ -155,9 +155,10 @@ class ValidatorRejectsBadDataTests(unittest.TestCase):
             with self.subTest(radius=r):
                 self.assert_rejected(lambda c: c.update(radius_km=r))
 
-    def test_site_far_outside_city(self):
-        self.assert_rejected(
-            lambda c: c["sites"][0].update(x_km=c["sites"][0]["x_km"] + 100))
+    def test_coincident_sites(self):
+        def mover(c):
+            c["sites"][1].update(x_km=c["sites"][0]["x_km"], y_km=c["sites"][0]["y_km"])
+        self.assert_rejected(mover)
 
     def test_missing_provenance(self):
         self.assert_rejected(lambda c: c["meta"].pop("sources"))
@@ -223,6 +224,18 @@ class CaseUnitsTests(unittest.TestCase):
             self.assertTrue(10 <= span <= 30, span)
         self.assertTrue(all(v > 0 for v in xs + ys))
 
+    def test_real_sites_are_useful_and_inside_study_area(self):
+        # El validador solo advierte esto; para los casos CABA es obligatorio.
+        for case_id in EXPECTED:
+            with self.subTest(case=case_id):
+                case = load(case_id)
+                xs = [z["x_km"] for z in case["zones"]]
+                ys = [z["y_km"] for z in case["zones"]]
+                for s, cubre in zip(case["sites"], coverage_sets(case)):
+                    self.assertTrue(cubre, f"{s['id']} no cubre ninguna zona")
+                    self.assertTrue(min(xs) - 2 <= s["x_km"] <= max(xs) + 2, s["id"])
+                    self.assertTrue(min(ys) - 2 <= s["y_km"] <= max(ys) + 2, s["id"])
+
     def test_comuna4_lies_inside_city(self):
         city = load("caba")["zones"]
         bx = (min(z["x_km"] for z in city), max(z["x_km"] for z in city))
@@ -230,6 +243,18 @@ class CaseUnitsTests(unittest.TestCase):
         for z in load("caba-comuna4")["zones"]:
             self.assertTrue(bx[0] <= z["x_km"] <= bx[1] and by[0] <= z["y_km"] <= by[1])
             self.assertTrue(math.isfinite(z["x_km"]) and math.isfinite(z["y_km"]))
+
+    def test_generated_cases_keep_full_provenance(self):
+        # Campos que agrega tools/build_cases.py y exige la atribucion GCBA.
+        for case_id in EXPECTED:
+            with self.subTest(case=case_id):
+                meta = load(case_id)["meta"]
+                for key in ("generator", "generated_at_utc", "weight_source",
+                            "site_selection"):
+                    self.assertTrue(meta.get(key), key)
+                for s in meta["sources"]:
+                    self.assertTrue(s.get("key"))
+                    self.assertTrue(s.get("dataset_page"))
 
     def test_licenses_and_sources_recorded(self):
         for case_id in EXPECTED:

@@ -1,18 +1,19 @@
 # Testing (issue #8, versión básica)
 
-Pruebas locales deterministas para el prototipo y los casos de datos. Ningún
+Pruebas locales deterministas del prototipo, los casos de datos, el núcleo/adaptador QAOA (`ambulance/`) y la UI. Ningún
 test usa un backend remoto, credenciales de proveedores ni jobs pagos.
 
 ## Cómo correr
 
 ```bash
-python -m pip install qiskit==2.5.2 numpy scipy
+python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v   # suite completa
 python tools/validate_cases.py            # contrato de data/cases/*.json
 python baseline.py                        # regresión del prototipo original
 ```
 
 Solo datos (no requiere Qiskit): `python -m unittest tests.test_cases_data -v`.
+UI (Node 22, sin dependencias): `npm test`.
 
 Con `uv`, sin tocar el entorno:
 
@@ -26,10 +27,15 @@ en pasos separados para distinguir el tipo de falla:
 | Paso | Qué detecta |
 | --- | --- |
 | Data | Contrato, totales de población, cobertura greedy/exacta y unidades de los casos CABA |
-| Unit tests | Regresiones del modelo (`baseline.py`) y de todo `tests/` |
+| Unit tests | Todo `tests/`: `baseline.py`, núcleo, adaptador QAOA, bridge y datos |
+| UI tests | Modelo y controlador de la UI (`npm test`) |
 | Baseline regression | Que `python baseline.py` corra y mantenga los resultados deterministas |
 
 ## Qué cubre
+
+`tests/test_core.py`, `tests/test_quantum.py`, `tests/test_bridge.py` y
+`tests/ui/*.test.js` vienen de los PR #12 y #13; ver `docs/LOCAL_VALIDATION.md`
+y `docs/UI.md`. Esta sección describe los tests de este PR.
 
 `tests/test_baseline.py` (prototipo original, 8 sitios):
 
@@ -58,8 +64,12 @@ en pasos separados para distinguir el tipo de falla:
 | `caba` | 3,552 | 8 | 3 | 3.0 km | 2,890,151 | 1,682,455 (58.2%) | 1,682,455 (58.2%) |
 
 - El validador **rechaza** datos rotos: población 0 o negativa, ID de zona
-  repetido, sin sitios, K fuera de rango, radio ≤ 0, sitio fuera de la ciudad
-  y falta de procedencia.
+  repetido, sin sitios, K fuera de rango, radio ≤ 0, sitios coincidentes y
+  falta de procedencia.
+- Los casos CABA mantienen la procedencia completa del generador y cada sitio
+  cubre al menos una zona dentro del área de estudio. En el validador eso es
+  solo una advertencia, porque el ejemplo sintético original tiene un sitio
+  que no cubre a nadie y el contrato lo permite.
 - Cambiar radio y K sobre Comuna 4: un radio mayor nunca cubre menos (cada
   sitio cubre un superconjunto de zonas), más ambulancias nunca cubren menos,
   K=1 greedy = exacto y K=8 alcanza el máximo.
@@ -76,7 +86,8 @@ Si una regeneración de datos cambia estos valores a propósito, actualizar
 | `caba-comuna4.json` | 31,981 bytes |
 | `caba.json` | 400,968 bytes |
 | Límite de tamaño de asset (`validate_cases.py`) | 1024 KB por archivo |
-| Suite completa (37 tests) | ~0.3 s |
+| Suite Python completa (74 tests) | ~2 s |
+| `npm test` (18 tests) | ~0.2 s |
 | `python baseline.py` | ~22 s |
 
 El límite de 1024 KB es provisional: todavía no se midió el límite real de
@@ -100,8 +111,6 @@ solución y ruido por backend, no una ventaja de velocidad cuántica.
 
 ## Pendiente para la versión completa de #8
 
-- Tests del núcleo y del adaptador QAOA (`ambulance/`), que ya existen en la
-  rama `feat/core-quantum-contract` y se suman a esta suite al mergearla.
-- Muestras inválidas o todas inválidas: requieren el adaptador de esa rama.
-- Tamaños de geometría simplificada y render del mapa, cuando exista la app (#5, #6).
-- Umbral de tamaño basado en mediciones reales de Qollab.
+- Medir tamaños de geometría simplificada y tiempos de render del mapa en la UI.
+- Umbral de tamaño basado en mediciones reales de Qollab (hoy 1024 KB provisional).
+- Completar la checklist manual en Qollab con el simulador incluido y uno de IonQ.
